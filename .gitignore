@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+.env.local
+.DS_Store
+*.log
+.idea/
+.vscode/
+*.swp
+*.swo
+test-http.js
+mcp-inspector-config.json

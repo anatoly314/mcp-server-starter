@@ -1,0 +1,35 @@
+{
+  "name": "mcp-server-sandbox",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsx -r dotenv/config src/server.ts",
+    "build": "tsc",
+    "dev": "tsx watch -r dotenv/config src/server.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "inspector:local": "./node_modules/.bin/mcp-inspector --no-open --config mcp-inspector-config.json --server sandbox-local",
+    "inspector:ngrok": "./node_modules/.bin/mcp-inspector --no-open --config mcp-inspector-config.json --server sandbox-ngrok",
+    "inspector:stdio": "./node_modules/.bin/mcp-inspector --no-open --config mcp-inspector-config.json --server sandbox-stdio"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.17.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "google-auth-library": "^10.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/inspector": "^0.15.0"
+  }
+}
