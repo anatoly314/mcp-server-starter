@@ -4,15 +4,19 @@ import {
   ListToolsRequestSchema,
   ListResourcesRequestSchema,
   ReadResourceRequestSchema,
+  ListPromptsRequestSchema,
+  GetPromptRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
-import { ToolHandlers, ResourceHandlers } from './handlers';
+import { ToolHandlers, ResourceHandlers, PromptHandlers } from './handlers';
 import { envProvider } from '../envProvider';
 import { createToolRegistry } from './tools/index.js';
+import { createPromptRegistry } from './prompts/index.js';
 
 export class MCPServer {
   private readonly server: Server;
   private readonly toolHandlers: ToolHandlers;
   private readonly resourceHandlers: ResourceHandlers;
+  private readonly promptHandlers: PromptHandlers;
 
   constructor() {
     this.server = new Server(
@@ -23,14 +27,17 @@ export class MCPServer {
       {
         capabilities: {
           tools: {},
-          resources: {}
+          resources: {},
+          prompts: {}
         },
       }
     );
 
     const toolRegistry = createToolRegistry();
+    const promptRegistry = createPromptRegistry();
     this.toolHandlers = new ToolHandlers(toolRegistry);
     this.resourceHandlers = new ResourceHandlers();
+    this.promptHandlers = new PromptHandlers(promptRegistry);
     this.setupHandlers();
   }
 
@@ -55,6 +62,17 @@ export class MCPServer {
     this.server.setRequestHandler(
       ReadResourceRequestSchema, 
       this.resourceHandlers.handleReadResource.bind(this.resourceHandlers)
+    );
+
+    // Prompt handlers
+    this.server.setRequestHandler(
+      ListPromptsRequestSchema,
+      this.promptHandlers.handleListPrompts.bind(this.promptHandlers)
+    );
+
+    this.server.setRequestHandler(
+      GetPromptRequestSchema,
+      this.promptHandlers.handleGetPrompt.bind(this.promptHandlers)
     );
   }
 
