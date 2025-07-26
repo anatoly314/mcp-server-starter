@@ -11,6 +11,7 @@ import { ToolHandlers, ResourceHandlers, PromptHandlers } from './handlers';
 import { envProvider } from '../envProvider';
 import { createToolRegistry } from './tools/index.js';
 import { createPromptRegistry } from './prompts/index.js';
+import { createResourceRegistry } from './resources/index.js';
 
 export class MCPServer {
   private readonly server: Server;
@@ -35,8 +36,9 @@ export class MCPServer {
 
     const toolRegistry = createToolRegistry();
     const promptRegistry = createPromptRegistry();
+    const resourceRegistry = createResourceRegistry();
     this.toolHandlers = new ToolHandlers(toolRegistry);
-    this.resourceHandlers = new ResourceHandlers();
+    this.resourceHandlers = new ResourceHandlers(resourceRegistry);
     this.promptHandlers = new PromptHandlers(promptRegistry);
     this.setupHandlers();
   }

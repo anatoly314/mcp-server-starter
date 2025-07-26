@@ -6,44 +6,32 @@ import {
   ErrorCode,
   McpError
 } from '@modelcontextprotocol/sdk/types.js';
-import { envProvider } from '../../envProvider';
+import { ResourceRegistry } from '../resources/index.js';
 
 export class ResourceHandlers {
+  constructor(private readonly resourceRegistry: ResourceRegistry) {}
+
   async handleListResources(request: ListResourcesRequest): Promise<{ resources: Resource[] }> {
-    return {
-      resources: [
-        {
-          uri: 'auth://status',
-          name: 'Authentication Status',
-          description: 'Current authentication configuration status',
-          mimeType: 'application/json'
-        }
-      ]
-    };
+    const resources = this.resourceRegistry.getResourceDefinitions();
+    return { resources };
   }
 
   async handleReadResource(request: ReadResourceRequest): Promise<ReadResourceResult> {
     const { uri } = request.params;
 
-    if (uri === 'auth://status') {
-      return {
-        contents: [
-          {
-            uri,
-            mimeType: 'application/json',
-            text: JSON.stringify({
-              enabled: envProvider.authEnabled,
-              configured: envProvider.authEnabled && !!envProvider.oauthClientId,
-              provider: envProvider.authEnabled ? envProvider.oauthProvider : 'none',
-              clientId: envProvider.authEnabled ? (envProvider.oauthClientId ? 'configured' : 'missing') : 'disabled',
-              redirectUri: envProvider.authEnabled ? envProvider.oauthRedirectUri : 'disabled',
-              scopes: envProvider.authEnabled ? envProvider.oauthScopes : 'disabled'
-            }, null, 2)
-          }
-        ]
-      };
-    }
+    try {
+      const resource = this.resourceRegistry.get(uri);
+      
+      if (!resource) {
+        throw new McpError(ErrorCode.InvalidRequest, `Unknown resource: ${uri}`);
+      }
 
-    throw new McpError(ErrorCode.InvalidRequest, `Unknown resource: ${uri}`);
+      return await resource.read(uri);
+    } catch (error) {
+      if (error instanceof McpError) {
+        throw error;
+      }
+      throw new McpError(ErrorCode.InternalError, `Resource read failed: ${error}`);
+    }
   }
 }
