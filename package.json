@@ -25,6 +25,7 @@
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "google-auth-library": "^10.1.0",
+    "ip-range-check": "^0.2.0",
     "jsonwebtoken": "^9.0.2",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"

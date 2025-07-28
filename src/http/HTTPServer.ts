@@ -5,6 +5,7 @@ import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { envProvider } from '../envProvider';
 import { authMiddleware } from './authMiddleware';
 import { loggingMiddleware } from './loggingMiddleware';
+import { ipFilterMiddleware } from './ipFilterMiddleware';
 
 export class HTTPServer {
   private readonly app: Express;
@@ -20,6 +21,12 @@ export class HTTPServer {
   }
 
   private setupMiddleware() {
+    // IP filter must be first - it's our first line of defense
+    this.app.use(ipFilterMiddleware);
+    
+    // Trust proxy headers (needed for reverse proxies like Cloudflare, nginx)
+    this.app.set('trust proxy', true);
+    
     // Enable CORS for all origins (needed for MCP Inspector)
     this.app.use(cors());
     this.app.use(express.json());
@@ -78,6 +85,9 @@ export class HTTPServer {
       console.error(`  - ${baseUrl}/ (Claude compatibility)`);
       if (envProvider.authEnabled) {
         console.error(`Authentication is ENABLED - Bearer token required for MCP endpoints`);
+      }
+      if (envProvider.filterByIp) {
+        console.error(`IP filtering is ENABLED - Allowed IPs: ${envProvider.filterByIp}`);
       }
     });
   }

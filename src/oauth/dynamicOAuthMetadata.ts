@@ -14,12 +14,11 @@ export function dynamicOAuthMetadataMiddleware(req: Request, res: Response, next
   // Determine the base URL from the request
   const protocol = req.protocol;
   const host = req.get('host') || `${envProvider.httpHost}:${envProvider.httpPort}`;
-  const requestBaseUrl = `${protocol}://${host}`;
+  const requestBasedUrl = `${protocol}://${host}`;
   
-  // Use PUBLIC_URL if it matches the request, otherwise use the request URL
-  const baseUrl = envProvider.publicUrl && req.get('host')?.includes('ngrok') 
-    ? envProvider.publicUrl 
-    : requestBaseUrl;
+  // Use request URL for localhost access, PUBLIC_URL for everything else
+  const isLocalhost = host.includes('localhost') || host.includes('127.0.0.1');
+  const baseUrl = (isLocalhost || !envProvider.publicUrl) ? requestBasedUrl : envProvider.publicUrl;
 
   console.error('OAuth metadata request:', {
     path: req.path,

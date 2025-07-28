@@ -24,6 +24,9 @@ interface EnvironmentConfig {
   TRANSPORT_TYPE: 'stdio' | 'http';
   HTTP_HOST?: string;
   HTTP_PORT?: string;
+  
+  // Security Configuration
+  FILTER_BY_IP?: string;
 }
 
 class EnvProvider {
@@ -76,7 +79,10 @@ class EnvProvider {
       PORT: process.env.PORT || '3000',
       TRANSPORT_TYPE: (transportType === 'stdio' ? 'stdio' : 'http') as 'stdio' | 'http',
       HTTP_HOST: process.env.HTTP_HOST || 'localhost',
-      HTTP_PORT: process.env.HTTP_PORT || '3000'
+      HTTP_PORT: process.env.HTTP_PORT || '3000',
+      
+      // Security Configuration
+      FILTER_BY_IP: process.env.FILTER_BY_IP
     };
   }
 
@@ -174,6 +180,10 @@ class EnvProvider {
 
   get publicUrl(): string | undefined {
     return this.config.PUBLIC_URL;
+  }
+
+  get filterByIp(): string | undefined {
+    return this.config.FILTER_BY_IP;
   }
 
   getAll(): EnvironmentConfig {
