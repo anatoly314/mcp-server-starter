@@ -1,12 +1,15 @@
 import { Prompt } from '@modelcontextprotocol/sdk/types.js';
 import { PromptImplementation } from './types.js';
+import { createLogger } from '../../logger.js';
+
+const logger = createLogger('prompt-registry');
 
 export class PromptRegistry {
   private prompts = new Map<string, PromptImplementation>();
 
   register(prompt: PromptImplementation): void {
     this.prompts.set(prompt.definition.name, prompt);
-    console.error(`Registered prompt: ${prompt.definition.name}`);
+    logger.info({ name: prompt.definition.name }, 'Registered prompt');
   }
 
   getAll(): PromptImplementation[] {

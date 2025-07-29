@@ -4,6 +4,9 @@ import crypto from 'crypto';
 import { OAuthProvider } from '../auth/providers/OAuthProvider';
 import { OAuthFactory } from '../auth/OAuthFactory';
 import { envProvider } from '../envProvider';
+import { createLogger } from '../logger';
+
+const logger = createLogger('oauth-proxy');
 
 interface RegisteredClient {
   client_id: string;
@@ -34,7 +37,7 @@ export class OAuthProxyRouter {
     this.router = Router();
     this.oauthProvider = OAuthFactory.createProvider();
     this.setupRoutes();
-    console.error('OAuthProxyRouter initialized');
+    logger.info('OAuthProxyRouter initialized');
   }
 
   private setupRoutes() {
@@ -97,14 +100,14 @@ export class OAuthProxyRouter {
         client_id_issued_at: Math.floor(Date.now() / 1000)
       };
 
-      console.error('Registered new OAuth client:', {
+      logger.info({
         client_id,
         redirect_uris,
         total_clients: this.registeredClients.size
-      });
+      }, 'Registered new OAuth client');
       res.status(201).json(response);
     } catch (error) {
-      console.error('Client registration error:', error);
+      logger.error({ error }, 'Client registration error');
       res.status(400).json({
         error: 'invalid_client_metadata',
         error_description: 'Failed to register client'
@@ -124,17 +127,17 @@ export class OAuthProxyRouter {
     } = req.query;
 
     // Validate client_id
-    console.error('Authorization request:', {
+    logger.info({
       client_id,
       registered_clients: Array.from(this.registeredClients.keys()),
       total_clients: this.registeredClients.size
-    });
+    }, 'Authorization request');
     
     let client = this.registeredClients.get(client_id as string);
     if (!client) {
       // Auto-register Claude clients
       if ((client_id as string).startsWith('mcp_') && redirect_uri) {
-        console.error('Auto-registering Claude client:', client_id);
+        logger.info({ client_id }, 'Auto-registering Claude client');
         client = {
           client_id: client_id as string,
           client_secret: 'auto-generated', // Not used for PKCE flow
@@ -146,7 +149,7 @@ export class OAuthProxyRouter {
         };
         this.registeredClients.set(client_id as string, client);
       } else {
-        console.error('Client not found:', client_id);
+        logger.error({ client_id }, 'Client not found');
         return res.status(400).json({
           error: 'invalid_client',
           error_description: 'Client not found'
@@ -174,11 +177,11 @@ export class OAuthProxyRouter {
       state: state as string
     });
     
-    console.error('Stored pending authorization:', {
+    logger.info({
       authCode,
       client_id,
       has_pkce: !!code_challenge
-    });
+    }, 'Stored pending authorization');
 
     // Store the original redirect_uri in state so we can redirect back later
     const stateData = {
@@ -198,7 +201,7 @@ export class OAuthProxyRouter {
     const finalAuthUrl = new URL(authUrl);
     finalAuthUrl.searchParams.set('state', encodedState);
 
-    console.error('Redirecting to OAuth provider:', finalAuthUrl.toString());
+    logger.info({ url: finalAuthUrl.toString() }, 'Redirecting to OAuth provider');
     res.redirect(finalAuthUrl.toString());
   }
 
@@ -304,7 +307,7 @@ export class OAuthProxyRouter {
         scope: tokens.scope || envProvider.oauthScopes
       });
     } catch (error: any) {
-      console.error('Token exchange error:', error);
+      logger.error({ error }, 'Token exchange error');
       res.status(400).json({
         error: 'invalid_grant',
         error_description: error.message || 'Failed to exchange tokens'
@@ -355,10 +358,10 @@ export class OAuthProxyRouter {
         callbackUrl.searchParams.set('state', stateData.original_state);
       }
       
-      console.error('Redirecting back to client with auth code:', stateData.auth_code);
+      logger.info({ auth_code: stateData.auth_code }, 'Redirecting back to client with auth code');
       res.redirect(callbackUrl.toString());
     } catch (error) {
-      console.error('Failed to decode state:', error);
+      logger.error({ error }, 'Failed to decode state');
       res.status(400).send('Invalid state parameter');
     }
   }

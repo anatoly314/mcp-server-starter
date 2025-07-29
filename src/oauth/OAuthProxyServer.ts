@@ -2,6 +2,9 @@ import { Express } from 'express';
 import { OAuthProxyRouter } from './OAuthProxyRouter';
 import { envProvider } from '../envProvider';
 import { dynamicOAuthMetadataMiddleware } from './dynamicOAuthMetadata';
+import { createLogger } from '../logger';
+
+const logger = createLogger('oauth-proxy-server');
 
 export class OAuthProxyServer {
   private app: Express;
@@ -19,7 +22,6 @@ export class OAuthProxyServer {
     this.app.use(oauthRouter.getRouter());
 
     const baseUrl = envProvider.publicUrl || `http://${envProvider.httpHost}:${envProvider.httpPort}`;
-    console.error(`OAuth proxy server enabled - OAuth metadata dynamically available at [request-origin]/.well-known/oauth-protected-resource`);
-    console.error(`Default base URL: ${baseUrl}`);
+    logger.info({ baseUrl }, 'OAuth proxy server enabled - OAuth metadata dynamically available at [request-origin]/.well-known/oauth-protected-resource');
   }
 }

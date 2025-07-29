@@ -6,6 +6,9 @@ import { envProvider } from '../envProvider';
 import { authMiddleware } from './authMiddleware';
 import { loggingMiddleware } from './loggingMiddleware';
 import { ipFilterMiddleware } from './ipFilterMiddleware';
+import { createLogger } from '../logger';
+
+const logger = createLogger('http');
 
 export class HTTPServer {
   private readonly app: Express;
@@ -79,15 +82,15 @@ export class HTTPServer {
   start() {
     this.app.listen(envProvider.httpPort, envProvider.httpHost, () => {
       const baseUrl = envProvider.publicUrl || `http://${envProvider.httpHost}:${envProvider.httpPort}`;
-      console.error(`${envProvider.mcpServerName} v${envProvider.mcpServerVersion} started`);
-      console.error(`MCP endpoints available at:`);
-      console.error(`  - ${baseUrl}/mcp (recommended)`);
-      console.error(`  - ${baseUrl}/ (Claude compatibility)`);
+      logger.info(`${envProvider.mcpServerName} v${envProvider.mcpServerVersion} started`);
+      logger.info('MCP endpoints available at:');
+      logger.info(`  - ${baseUrl}/mcp (recommended)`);
+      logger.info(`  - ${baseUrl}/ (Claude compatibility)`);
       if (envProvider.authEnabled) {
-        console.error(`Authentication is ENABLED - Bearer token required for MCP endpoints`);
+        logger.info('Authentication is ENABLED - Bearer token required for MCP endpoints');
       }
       if (envProvider.filterByIp) {
-        console.error(`IP filtering is ENABLED - Allowed IPs: ${envProvider.filterByIp}`);
+        logger.info({ allowedIps: envProvider.filterByIp }, 'IP filtering is ENABLED');
       }
     });
   }

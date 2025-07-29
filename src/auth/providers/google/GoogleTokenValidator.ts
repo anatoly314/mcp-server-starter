@@ -1,4 +1,7 @@
 import { OAuthUserInfo } from '../OAuthProvider';
+import { createLogger } from '../../../logger';
+
+const logger = createLogger('google-token-validator');
 
 interface TokenInfo {
   valid: boolean;
@@ -46,7 +49,7 @@ export class GoogleTokenValidator {
     // Check cache first
     const cached = this.cache.get(token);
     if (cached && this.isCacheValid(cached)) {
-      console.error('Token validation cache hit');
+      logger.info('Token validation cache hit');
       return {
         valid: cached.valid,
         userInfo: cached.userInfo,
@@ -56,7 +59,7 @@ export class GoogleTokenValidator {
     }
 
     // Cache miss - validate with Google
-    console.error('Token validation cache miss - checking with Google');
+    logger.info('Token validation cache miss - checking with Google');
     try {
       const response = await fetch(this.googleTokenInfoEndpoint, {
         method: 'POST',
@@ -106,7 +109,7 @@ export class GoogleTokenValidator {
       return result;
 
     } catch (error: any) {
-      console.error('Token validation error:', error);
+      logger.error({ error }, 'Token validation error');
       const result: TokenInfo = {
         valid: false,
         error: `Token validation error: ${error.message}`
@@ -192,7 +195,7 @@ export class GoogleTokenValidator {
     }
     
     if (cleaned > 0) {
-      console.error(`Cleaned up ${cleaned} expired cache entries`);
+      logger.info({ cleaned }, 'Cleaned up expired cache entries');
     }
   }
 

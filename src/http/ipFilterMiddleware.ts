@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import ipRangeCheck from 'ip-range-check';
 import { envProvider } from '../envProvider';
+import { createLogger } from '../logger';
+
+const logger = createLogger('ip-filter');
 
 /**
  * IP Filter Middleware
@@ -53,7 +56,7 @@ export function ipFilterMiddleware(req: Request, res: Response, next: NextFuncti
   
   // Always allow local requests (no proxy headers present)
   if (!clientIp) {
-    console.error('IP Filter: Allowing local request (no proxy headers)');
+    logger.debug('Allowing local request (no proxy headers)');
     return next();
   }
   
@@ -63,16 +66,16 @@ export function ipFilterMiddleware(req: Request, res: Response, next: NextFuncti
   // Check if client IP is in any allowed range
   try {
     if (ipRangeCheck(clientIp, allowedRanges)) {
-      console.error(`IP Filter: Allowing request from ${clientIp}`);
+      logger.debug({ clientIp }, 'Allowing request');
       return next();
     }
   } catch (error) {
-    console.error(`IP Filter: Error checking IP ${clientIp}:`, error);
+    logger.error({ clientIp, error }, 'Error checking IP');
     // On error, deny access for security
   }
   
   // IP not allowed
-  console.error(`IP Filter: Blocking request from ${clientIp} (not in whitelist: ${filterByIp})`);
+  logger.warn({ clientIp, whitelist: filterByIp }, 'Blocking request - IP not in whitelist');
   res.status(403).json({
     error: 'Forbidden',
     message: 'Access denied from your IP address'

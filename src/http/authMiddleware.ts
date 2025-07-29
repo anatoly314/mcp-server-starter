@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import { envProvider } from '../envProvider';
 import { googleTokenValidator } from '../auth/providers/google/GoogleTokenValidator';
+import { createLogger } from '../logger';
+
+const logger = createLogger('auth-middleware');
 
 export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
   // Skip auth for OAuth proxy endpoints
@@ -33,7 +36,7 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
     
     next();
   } catch (error: any) {
-    console.error('Token validation error:', error.message);
+    logger.error({ error: error.message }, 'Token validation error');
     
     // Return proper OAuth error response
     const errorResponse: any = {

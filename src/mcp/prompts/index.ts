@@ -2,6 +2,9 @@ import { PromptRegistry } from './PromptRegistry.js';
 import { CodeReviewPrompt } from './code-review/CodeReviewPrompt.js';
 import { ExplainCodePrompt } from './explain-code/ExplainCodePrompt.js';
 import { GenerateTestPrompt } from './generate-test/GenerateTestPrompt.js';
+import { createLogger } from '../../logger.js';
+
+const logger = createLogger('prompts');
 
 export function createPromptRegistry(): PromptRegistry {
   const registry = new PromptRegistry();
@@ -11,7 +14,7 @@ export function createPromptRegistry(): PromptRegistry {
   registry.register(new ExplainCodePrompt());
   registry.register(new GenerateTestPrompt());
   
-  console.error(`Prompt registry initialized with ${registry.size()} prompts`);
+  logger.info({ promptCount: registry.size() }, 'Prompt registry initialized');
   
   return registry;
 }

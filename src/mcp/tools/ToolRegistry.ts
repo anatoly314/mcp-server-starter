@@ -1,12 +1,15 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
 import { ToolImplementation } from './types.js';
+import { createLogger } from '../../logger.js';
+
+const logger = createLogger('tool-registry');
 
 export class ToolRegistry {
   private tools = new Map<string, ToolImplementation>();
 
   register(tool: ToolImplementation): void {
     this.tools.set(tool.definition.name, tool);
-    console.error(`Registered tool: ${tool.definition.name}`);
+    logger.info({ name: tool.definition.name }, 'Registered tool');
   }
 
   getAll(): ToolImplementation[] {

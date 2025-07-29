@@ -1,12 +1,15 @@
 import { Resource } from '@modelcontextprotocol/sdk/types.js';
 import { ResourceImplementation } from './types.js';
+import { createLogger } from '../../logger.js';
+
+const logger = createLogger('resource-registry');
 
 export class ResourceRegistry {
   private resources = new Map<string, ResourceImplementation>();
 
   register(resource: ResourceImplementation): void {
     this.resources.set(resource.definition.uri, resource);
-    console.error(`Registered resource: ${resource.definition.uri}`);
+    logger.info({ uri: resource.definition.uri }, 'Registered resource');
   }
 
   getAll(): ResourceImplementation[] {

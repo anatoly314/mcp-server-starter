@@ -1,6 +1,9 @@
 import { OAuth2Client } from 'google-auth-library';
 import { envProvider } from '../../../envProvider';
 import { OAuthProvider, OAuthTokens, OAuthUserInfo } from '../OAuthProvider';
+import { createLogger } from '../../../logger';
+
+const logger = createLogger('google-oauth-provider');
 
 export class GoogleOAuthProvider implements OAuthProvider {
   private oauth2Client: OAuth2Client;
@@ -15,7 +18,7 @@ export class GoogleOAuthProvider implements OAuthProvider {
       envProvider.oauthClientSecret,
       redirectUri
     );
-    console.error('GoogleOAuth initialized with redirect URI:', redirectUri);
+    logger.info({ redirectUri }, 'GoogleOAuth initialized');
   }
 
   generateAuthUrl(scopes: string[] = ['openid', 'email', 'profile']): string {

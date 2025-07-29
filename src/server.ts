@@ -3,6 +3,9 @@ import { HTTPServer } from './http/HTTPServer';
 import { StdioServer } from './stdio/StdioServer';
 import { OAuthProxyServer } from './oauth/OAuthProxyServer';
 import { envProvider } from './envProvider';
+import { createLogger } from './logger';
+
+const logger = createLogger('server');
 
 async function main() {
   try {
@@ -32,21 +35,24 @@ async function main() {
       httpServer.start();
     }
   } catch (error) {
-    console.error('Failed to start server:', error);
+    logger.error({ error }, 'Failed to start server');
     process.exit(1);
   }
 }
 
 // Handle graceful shutdown
 process.on('SIGINT', () => {
-  console.error('\nShutting down gracefully...');
+  logger.info('Shutting down gracefully...');
   process.exit(0);
 });
 
 process.on('SIGTERM', () => {
-  console.error('\nShutting down gracefully...');
+  logger.info('Shutting down gracefully...');
   process.exit(0);
 });
 
 // Start the server
-main().catch(console.error);
+main().catch((error) => {
+  logger.fatal({ error }, 'Unhandled error in main');
+  process.exit(1);
+});

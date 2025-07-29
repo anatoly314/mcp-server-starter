@@ -1,5 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { envProvider } from '../envProvider';
+import { createLogger } from '../logger';
+
+const logger = createLogger('oauth-metadata');
 
 /**
  * Dynamic OAuth metadata middleware that returns URLs based on the request origin
@@ -20,12 +23,12 @@ export function dynamicOAuthMetadataMiddleware(req: Request, res: Response, next
   const isLocalhost = host.includes('localhost') || host.includes('127.0.0.1');
   const baseUrl = (isLocalhost || !envProvider.publicUrl) ? requestBasedUrl : envProvider.publicUrl;
 
-  console.error('OAuth metadata request:', {
+  logger.info({
     path: req.path,
     requestHost: req.get('host'),
     protocol: req.protocol,
     baseUrl: baseUrl
-  });
+  }, 'OAuth metadata request');
 
   if (req.path === '/.well-known/oauth-protected-resource') {
     res.json({

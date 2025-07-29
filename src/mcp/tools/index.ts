@@ -1,6 +1,9 @@
 import { ToolRegistry } from './ToolRegistry.js';
 import { EchoTool } from './echo/EchoTool.js';
 import { TimestampTool } from './timestamp/TimestampTool.js';
+import { createLogger } from '../../logger.js';
+
+const logger = createLogger('tools');
 
 export function createToolRegistry(): ToolRegistry {
   const registry = new ToolRegistry();
@@ -9,7 +12,7 @@ export function createToolRegistry(): ToolRegistry {
   registry.register(new EchoTool());
   registry.register(new TimestampTool());
   
-  console.error(`Tool registry initialized with ${registry.size()} tools`);
+  logger.info({ toolCount: registry.size() }, 'Tool registry initialized');
   
   return registry;
 }

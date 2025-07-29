@@ -16,21 +16,25 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.17.0",
-    "@types/cors": "^2.8.19",
-    "@types/express": "^5.0.3",
-    "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^24.1.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "google-auth-library": "^10.1.0",
     "ip-range-check": "^0.2.0",
     "jsonwebtoken": "^9.0.2",
-    "tsx": "^4.20.3",
-    "typescript": "^5.8.3"
+    "pino": "^9.7.0",
+    "pino-http": "^10.5.0",
+    "pino-pretty": "^13.0.0"
   },
   "devDependencies": {
-    "@modelcontextprotocol/inspector": "^0.15.0"
+    "@modelcontextprotocol/inspector": "^0.15.0",
+    "@modelcontextprotocol/sdk": "^1.17.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.1.0",
+    "@types/pino": "^7.0.4",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
   }
 }
