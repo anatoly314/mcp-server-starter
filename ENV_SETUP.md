@@ -12,33 +12,23 @@
 
 ## Configuration Files
 
-### 1. Local Development (`.env.local.example`)
+### 1. HTTP Transport (`.env.http.example`)
 ```bash
-# Copy for local development
-cp .env.local.example .env
+# Copy for HTTP transport
+cp .env.http.example .env.http
 
-# PUBLIC_URL=http://localhost:3000
-# Redirect URI: http://localhost:3000/oauth/callback
+# Set PUBLIC_URL based on your environment:
+# Local: PUBLIC_URL=http://localhost:3000
+# Ngrok: PUBLIC_URL=https://your-id.ngrok-free.app
+# Production: PUBLIC_URL=https://yourdomain.com
 ```
 
-### 2. Ngrok Development (`.env.ngrok.example`)
+### 2. STDIO Transport (`.env.stdio.example`)
 ```bash
-# Copy for ngrok usage
-cp .env.ngrok.example .env
+# Copy for STDIO transport
+cp .env.stdio.example .env.stdio
 
-# Update PUBLIC_URL with your ngrok URL
-PUBLIC_URL=https://your-id.ngrok-free.app
-# Redirect URI: https://your-id.ngrok-free.app/oauth/callback
-```
-
-### 3. Production (`.env.production.example`)
-```bash
-# Copy for production
-cp .env.production.example .env
-
-# Set your production domain
-PUBLIC_URL=https://mcp.yourdomain.com
-# Redirect URI: https://mcp.yourdomain.com/oauth/callback
+# Minimal configuration needed for stdio mode
 ```
 
 ## Google Console Setup
@@ -52,9 +42,10 @@ Add ALL these redirect URIs to your Google OAuth client:
 
 ### Local Development
 ```bash
-cp .env.local.example .env
-npm run dev
-npm run inspector:local
+cp .env.http.example .env.http
+pnpm run dev:http
+# For inspector, use stdio mode:
+pnpm run inspector:stdio
 ```
 
 ### Ngrok Testing
@@ -63,11 +54,10 @@ npm run inspector:local
 ngrok http 3000
 
 # Copy ngrok URL, then:
-cp .env.ngrok.example .env
-# Edit .env and set PUBLIC_URL to your ngrok URL
+cp .env.http.example .env.http
+# Edit .env.http and set PUBLIC_URL to your ngrok URL
 
-npm run dev
-npm run inspector:ngrok
+pnpm run dev:http
 ```
 
 ## Important Notes

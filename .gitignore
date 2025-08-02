@@ -9,4 +9,5 @@ dist/
 *.swp
 *.swo
 test-http.js
-mcp-inspector-config.json
+.env.http
+.env.stdio

@@ -12,8 +12,8 @@ In traditional OAuth flows, you must manually register your application before u
 4. Configure these credentials in your app
 
 Example: When you set up Google OAuth, you manually created:
-GOOGLE_CLIENT_ID=448396576870-j9mu949o4cs7osj7rpc8pc807h8jv9do.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=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
+OAUTH_CLIENT_ID=your-client-id-from-google-console
+OAUTH_CLIENT_SECRET=your-client-secret-from-google-console
 
 Dynamic Client Registration (DCR)
 

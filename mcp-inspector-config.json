@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "http-server": {
+      "type": "streamable-http",
+      "url": "http://localhost:3000/mcp",
+      "note": "For Streamable HTTP connections, add this URL directly in your MCP Client"
+    },
+    "stdio-server": {
+      "command": "tsx",
+      "args": ["-r", "dotenv/config", "src/server.ts"],
+      "env": {
+        "DEBUG": "true",
+        "TRANSPORT_TYPE": "stdio"
+      }
+    }
+  }
+}
+

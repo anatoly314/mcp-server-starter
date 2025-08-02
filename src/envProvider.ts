@@ -12,10 +12,6 @@ interface EnvironmentConfig {
   OAUTH_SCOPES?: string;
   PUBLIC_URL?: string;
   
-  // Legacy Google-specific (for backwards compatibility)
-  GOOGLE_CLIENT_ID: string;
-  GOOGLE_CLIENT_SECRET: string;
-  GOOGLE_REDIRECT_URI: string;
   
   // MCP Server Configuration
   MCP_SERVER_NAME: string;
@@ -43,16 +39,15 @@ class EnvProvider {
     const oauthProxyEnabled = process.env.OAUTH_PROXY_ENABLED === 'true';
     const oauthProvider = (process.env.OAUTH_PROVIDER || 'google') as 'google' | 'custom';
     
-    // Use OAUTH_* vars if available, fall back to GOOGLE_* for backwards compatibility
-    const clientId = process.env.OAUTH_CLIENT_ID || process.env.GOOGLE_CLIENT_ID || '';
-    const clientSecret = process.env.OAUTH_CLIENT_SECRET || process.env.GOOGLE_CLIENT_SECRET || '';
+    const clientId = process.env.OAUTH_CLIENT_ID || '';
+    const clientSecret = process.env.OAUTH_CLIENT_SECRET || '';
     
     // Derive redirect URI from PUBLIC_URL if not explicitly set
     const publicUrl = process.env.PUBLIC_URL;
     const defaultRedirectUri = publicUrl 
       ? `${publicUrl}/oauth/callback` 
       : `http://localhost:${process.env.HTTP_PORT || '3000'}/oauth/callback`;
-    const redirectUri = process.env.OAUTH_REDIRECT_URI || process.env.GOOGLE_REDIRECT_URI || defaultRedirectUri;
+    const redirectUri = process.env.OAUTH_REDIRECT_URI || defaultRedirectUri;
     
     return {
       // OAuth Configuration
@@ -67,11 +62,6 @@ class EnvProvider {
       OAUTH_USERINFO_URL: process.env.OAUTH_USERINFO_URL,
       OAUTH_SCOPES: process.env.OAUTH_SCOPES || 'openid email profile',
       PUBLIC_URL: process.env.PUBLIC_URL,
-      
-      // Legacy support
-      GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || clientId,
-      GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET || clientSecret,
-      GOOGLE_REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI || redirectUri,
       
       // MCP Configuration
       MCP_SERVER_NAME: process.env.MCP_SERVER_NAME || 'mcp-server-sandbox',
@@ -92,27 +82,15 @@ class EnvProvider {
         throw new Error('Missing required OAuth environment variables: OAUTH_CLIENT_ID and OAUTH_CLIENT_SECRET');
       }
       
-      if (this.config.OAUTH_PROVIDER === 'custom') {
-        const required = ['OAUTH_AUTHORIZATION_URL', 'OAUTH_TOKEN_URL'];
-        const missing = required.filter(key => !this.config[key as keyof EnvironmentConfig]);
-        if (missing.length > 0) {
-          throw new Error(`Missing required environment variables for custom OAuth: ${missing.join(', ')}`);
-        }
+      // All providers must specify their OAuth URLs
+      const required = ['OAUTH_AUTHORIZATION_URL', 'OAUTH_TOKEN_URL', 'OAUTH_USERINFO_URL'];
+      const missing = required.filter(key => !this.config[key as keyof EnvironmentConfig]);
+      if (missing.length > 0) {
+        throw new Error(`Missing required OAuth environment variables: ${missing.join(', ')}`);
       }
     }
   }
 
-  get googleClientId(): string {
-    return this.config.GOOGLE_CLIENT_ID;
-  }
-
-  get googleClientSecret(): string {
-    return this.config.GOOGLE_CLIENT_SECRET;
-  }
-
-  get googleRedirectUri(): string {
-    return this.config.GOOGLE_REDIRECT_URI;
-  }
 
   get mcpServerName(): string {
     return this.config.MCP_SERVER_NAME;
@@ -159,15 +137,24 @@ class EnvProvider {
   }
 
   get oauthAuthorizationUrl(): string {
-    return this.config.OAUTH_AUTHORIZATION_URL || 'https://accounts.google.com/o/oauth2/v2/auth';
+    if (!this.config.OAUTH_AUTHORIZATION_URL) {
+      throw new Error('OAUTH_AUTHORIZATION_URL is required');
+    }
+    return this.config.OAUTH_AUTHORIZATION_URL;
   }
 
   get oauthTokenUrl(): string {
-    return this.config.OAUTH_TOKEN_URL || 'https://oauth2.googleapis.com/token';
+    if (!this.config.OAUTH_TOKEN_URL) {
+      throw new Error('OAUTH_TOKEN_URL is required');
+    }
+    return this.config.OAUTH_TOKEN_URL;
   }
 
   get oauthUserInfoUrl(): string {
-    return this.config.OAUTH_USERINFO_URL || 'https://www.googleapis.com/oauth2/v2/userinfo';
+    if (!this.config.OAUTH_USERINFO_URL) {
+      throw new Error('OAUTH_USERINFO_URL is required');
+    }
+    return this.config.OAUTH_USERINFO_URL;
   }
 
   get oauthScopes(): string {

@@ -6,10 +6,11 @@
     "start": "tsx -r dotenv/config src/server.ts",
     "build": "tsc",
     "dev": "tsx watch -r dotenv/config src/server.ts",
+    "dev:stdio": "DOTENV_CONFIG_PATH=.env.stdio tsx watch -r dotenv/config src/server.ts",
+    "dev:http": "DOTENV_CONFIG_PATH=.env.http tsx watch -r dotenv/config src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "inspector:local": "./node_modules/.bin/mcp-inspector --no-open --config mcp-inspector-config.json --server sandbox-local",
-    "inspector:ngrok": "./node_modules/.bin/mcp-inspector --no-open --config mcp-inspector-config.json --server sandbox-ngrok",
-    "inspector:stdio": "./node_modules/.bin/mcp-inspector --no-open --config mcp-inspector-config.json --server sandbox-stdio"
+    "inspector:http": "./node_modules/.bin/mcp-inspector --config mcp-inspector-config.json --server http-server",
+    "inspector:stdio": "./node_modules/.bin/mcp-inspector --no-open --config mcp-inspector-config.json --server stdio-server"
   },
   "keywords": [],
   "author": "",

@@ -13,39 +13,56 @@ A basic Model Context Protocol (MCP) server implementation with Google OAuth sup
 
 ## Setup
 
-1. Install dependencies:
+1. Install tsx globally (required for Claude Desktop):
 ```bash
-npm install
+npm install -g tsx
 ```
 
-2. Create a `.env` file based on `.env.example`:
+2. Install dependencies:
 ```bash
-cp .env.example .env
+pnpm install
+```
+
+3. Create environment files based on the examples:
+```bash
+# For HTTP transport (default)
+cp .env.http.example .env.http
+
+# For STDIO transport
+cp .env.stdio.example .env.stdio
 ```
 
 3. Configure authentication (optional):
-   - Set `AUTH_ENABLED=true` in `.env` to enable authentication
+   - Set `AUTH_ENABLED=true` in `.env.http` to enable authentication
    - If authentication is enabled:
      - Go to [Google Cloud Console](https://console.cloud.google.com/)
      - Create a new project or select an existing one
      - Enable Google+ API
      - Create OAuth 2.0 credentials
      - **IMPORTANT**: Add `http://localhost:3000/oauth/callback` to the authorized redirect URIs in Google Cloud Console
-     - Add your `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` to `.env`
+     - Add your `OAUTH_CLIENT_ID` and `OAUTH_CLIENT_SECRET` to `.env.http`
    - If `AUTH_ENABLED=false`, authentication tools won't be available
 
 ## Running the Server
 
 ### HTTP Transport (default)
 ```bash
-npx tsx -r dotenv/config src/server.ts
+# Using npm scripts
+pnpm run dev:http
+
+# Or manually
+DOTENV_CONFIG_PATH=.env.http tsx watch -r dotenv/config src/server.ts
 ```
 
 The server will start on `http://localhost:3000/mcp` by default.
 
 ### Stdio Transport
 ```bash
-TRANSPORT_TYPE=stdio npx tsx -r dotenv/config src/server.ts
+# Using npm scripts
+pnpm run dev:stdio
+
+# Or manually
+DOTENV_CONFIG_PATH=.env.stdio tsx watch -r dotenv/config src/server.ts
 ```
 
 ## Available Tools
@@ -65,20 +82,14 @@ TRANSPORT_TYPE=stdio npx tsx -r dotenv/config src/server.ts
 
 ## Using with Claude Desktop
 
-For stdio transport, add to your Claude Desktop configuration:
+See [CLAUDE_DESKTOP_SETUP.md](./CLAUDE_DESKTOP_SETUP.md) for detailed setup instructions.
 
-```json
-{
-  "mcpServers": {
-    "mcp-server-sandbox": {
-      "command": "npx",
-      "args": ["tsx", "-r", "dotenv/config", "/path/to/mcp-server-sandbox/src/server.ts"],
-      "env": {
-        "TRANSPORT_TYPE": "stdio"
-      }
-    }
-  }
-}
+Quick setup:
+```bash
+# 1. Copy the configuration
+cp claude_desktop_config.json ~/Library/Application\ Support/Claude/claude_desktop_config.json
+
+# 2. Restart Claude Desktop
 ```
 
 Note: HTTP transport is not currently supported in Claude Desktop.
@@ -89,6 +100,7 @@ Note: HTTP transport is not currently supported in Claude Desktop.
 src/
 ├── server.ts                 # Main entry point
 ├── envProvider.ts           # Environment configuration
+├── logger.ts                # Logger configuration (outputs to stderr)
 ├── auth/                    # OAuth providers
 │   ├── OAuthProvider.ts     # OAuth provider interface
 │   ├── OAuthFactory.ts      # Provider factory
@@ -114,6 +126,7 @@ src/
 3. **Environment-based Configuration**: All config comes from environment variables
 4. **Transport Agnostic**: MCP server works with both HTTP and stdio transports
 5. **OAuth Flexibility**: Supports both Google OAuth and custom OAuth providers
+6. **Proper Logging**: All logs go to stderr to keep stdout clean for protocol communication
 
 ## Development
 
@@ -133,7 +146,7 @@ src/
 
 1. Create new provider in `src/auth/` implementing `OAuthProvider` interface
 2. Update `OAuthFactory.ts` to include your provider
-3. Set `OAUTH_PROVIDER=yourprovider` in `.env`
+3. Set `OAUTH_PROVIDER=yourprovider` in `.env.http`
 
 ## Troubleshooting OAuth
 
@@ -146,32 +159,23 @@ If you see this error when trying to authenticate:
 4. Add `http://localhost:3000/oauth/callback` to "Authorized redirect URIs"
 5. Save the changes
 
-The redirect URI in Google Cloud Console must exactly match `GOOGLE_REDIRECT_URI` in your `.env` file.
+The redirect URI in Google Cloud Console must exactly match the redirect URI derived from your `PUBLIC_URL` in `.env.http` (defaults to `http://localhost:3000/oauth/callback`).
 
 ## Testing with MCP Inspector
 
 The project includes MCP Inspector for testing. First, start the server:
 
 ```bash
-# Start server with authentication enabled
-AUTH_ENABLED=true npm start
+# Start HTTP server (for manual HTTP connection in Inspector)
+pnpm run dev:http
 
-# Or without authentication
-npm start
+# Or use Inspector with stdio transport
+pnpm run inspector:stdio
 ```
 
-Then in another terminal, run the inspector:
-
-```bash
-# Test with OAuth proxy (works with MCP Inspector!)
-npm run inspector:http
-
-# Test without authentication 
-npm run inspector:http:debug
-
-# Test stdio transport
-npm run inspector:stdio
-```
+Note: HTTP transport configuration in MCP Inspector config files is not yet fully supported. You can either:
+- Use stdio transport: `pnpm run inspector:stdio`
+- Start HTTP server manually and configure the connection in Inspector GUI
 
 ## OAuth Proxy Implementation
 

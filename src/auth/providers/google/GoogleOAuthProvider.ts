@@ -43,7 +43,7 @@ export class GoogleOAuthProvider implements OAuthProvider {
     try {
       const ticket = await this.oauth2Client.verifyIdToken({
         idToken,
-        audience: envProvider.googleClientId
+        audience: envProvider.oauthClientId
       });
       return ticket.getPayload();
     } catch (error) {
