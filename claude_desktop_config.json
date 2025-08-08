@@ -1,12 +1,12 @@
 {
   "mcpServers": {
-    "mcp-server-sandbox": {
+    "mcp-server-starter": {
       "command": "tsx",
       "args": [
-        "/Users/anatoly/Developer/git/mcp-server-sandbox/src/server.ts"
+        "/Users/anatoly/Developer/git/mcp-server-starter/src/server.ts"
       ],
       "env": {
-        "MCP_SERVER_NAME": "mcp-server-sandbox",
+        "MCP_SERVER_NAME": "mcp-server-starter",
         "MCP_SERVER_VERSION": "1.0.0",
         "TRANSPORT_TYPE": "stdio"
       }

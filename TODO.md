@@ -1,111 +1,154 @@
-# TODO: OAuth Service Migration
+# Development Roadmap
 
-## Current State
-- Custom OAuth proxy implementation in `/src/oauth/`
-- Direct integration with Google OAuth
-- Token validation with caching in `GoogleTokenValidator`
+## Current Status
 
-## Migration Plan
+✅ **Core Features Complete:**
+- MCP server with tools, resources, and prompts
+- HTTP and stdio transports
+- Google OAuth 2.0 authentication
+- IP and email filtering
+- Structured logging with Pino
+- Registry pattern for extensibility
+- Production-ready middleware stack
 
-### Phase 1: Evaluate Auth Services (Current)
-**Decision needed between:**
+## Planned Enhancements
 
-**Auth0**
--  Industry standard, mature
--  Extensive features (MFA, enterprise SSO, etc.)
--  Great documentation
-- L More expensive at scale
-- L Can be overkill for simple use cases
+### Phase 1: Testing & Documentation
+- [ ] Add unit tests for core components
+- [ ] Add integration tests for OAuth flow
+- [ ] Create API documentation
+- [ ] Add JSDoc comments to all public methods
+- [ ] Create video tutorial for setup
 
-**Clerk**
--  Modern, developer-friendly
--  Better pricing for small-medium scale
--  Built-in user management UI
--  Simpler implementation
-- L Newer, less battle-tested
-- L Fewer enterprise features
+### Phase 2: Developer Experience
+- [ ] CLI tool for scaffolding new tools/resources
+- [ ] Hot reload for development
+- [ ] Better error messages with suggestions
+- [ ] TypeScript strict mode
+- [ ] Automated release workflow
 
-**Recommendation**: Start with Clerk for simplicity, migrate to Auth0 if you need enterprise features.
+### Phase 3: Additional Features
+- [ ] Rate limiting middleware
+- [ ] Metrics collection (Prometheus format)
+- [ ] Health check endpoint
+- [ ] WebSocket transport support
+- [ ] Multiple OAuth provider support (GitHub, Microsoft)
+- [ ] Database integration examples (PostgreSQL, MongoDB)
+- [ ] Redis caching layer example
 
-### Phase 2: Implement External Auth Service
-1. Remove `/src/oauth/` directory (OAuth proxy code)
-2. Configure Clerk/Auth0 to handle Google OAuth
-3. Update OAuth metadata endpoints to point to Clerk/Auth0
+### Phase 4: Deployment & Scaling
+- [ ] Docker Compose setup
+- [ ] Kubernetes manifests
+- [ ] Terraform modules for cloud deployment
+- [ ] Auto-scaling configuration
+- [ ] Load balancer integration guide
+- [ ] Multi-region deployment guide
 
-### Phase 3: Update Token Validation
-1. Keep `GoogleTokenValidator` pattern but rename to `TokenValidator`
-2. Update validation to check Clerk/Auth0 tokens instead of Google
-3. Keep caching logic - it's still valuable!
+## Example Tools to Add
 
-### Code Changes Required
+Showcase the extensibility with real-world examples:
 
-**Remove:**
-- `/src/oauth/` directory entirely
-- OAuth proxy routes from server
-- Dynamic OAuth metadata
+### Developer Tools
+- [ ] GitHub integration (issues, PRs, repos)
+- [ ] Jira ticket management
+- [ ] Database query executor
+- [ ] AWS resource manager
+- [ ] Kubernetes cluster operations
 
-**Keep:**
-- `/src/auth/providers/` structure
-- Token validation with caching
-- Auth middleware pattern
+### Business Tools
+- [ ] Slack message sender
+- [ ] Email automation
+- [ ] Calendar management
+- [ ] Document generation
+- [ ] Analytics dashboard queries
 
-**Update:**
-```typescript
-// Before
-const userInfo = await googleTokenValidator.getUserInfo(token);
+### AI/ML Tools
+- [ ] Vector database operations
+- [ ] Model inference endpoints
+- [ ] Training job management
+- [ ] Dataset operations
+- [ ] Prompt management system
 
-// After (minimal change!)
-const userInfo = await clerkTokenValidator.getUserInfo(token);
-```
+## Architecture Improvements
 
-### Environment Variables
-```bash
-# Remove
-OAUTH_CLIENT_ID=xxx
-OAUTH_CLIENT_SECRET=xxx
-OAUTH_PROVIDER=google
+### Potential Refactors
+- [ ] Consider event-driven architecture for handlers
+- [ ] Implement middleware pipeline pattern
+- [ ] Add dependency injection (only if complexity grows)
+- [ ] Create plugin system for external tools
+- [ ] Add request context propagation
 
-# Add
-CLERK_SECRET_KEY=xxx
-# or
-AUTH0_DOMAIN=xxx
-AUTH0_AUDIENCE=xxx
-```
+### Performance Optimizations
+- [ ] Connection pooling for OAuth requests
+- [ ] Implement request batching
+- [ ] Add response caching layer
+- [ ] Optimize TypeScript compilation
+- [ ] Lazy load tool implementations
 
-### Benefits of Migration
-1. **Security**: Offload security updates to specialists
-2. **Features**: Get MFA, social logins, enterprise SSO for free
-3. **Compliance**: SOC2, GDPR handled by auth service
-4. **Focus**: Concentrate on MCP features, not auth
-5. **Time**: Save weeks of development
+## Community & Ecosystem
 
-### Decision Criteria
-Choose **Clerk** if:
-- Building SaaS/startup
-- Want quickest implementation
-- Need good default UI
-- Cost-sensitive
+### Documentation
+- [ ] Create cookbook with common patterns
+- [ ] Build showcase of community tools
+- [ ] Write migration guide from other MCP servers
+- [ ] Create troubleshooting guide
+- [ ] Add architecture decision records (ADRs)
 
-Choose **Auth0** if:
-- Enterprise customers
-- Need advanced features
-- Require extensive customization
-- Have compliance requirements
+### Community Building
+- [ ] Create Discord/Slack community
+- [ ] Monthly virtual meetups
+- [ ] Tool sharing marketplace
+- [ ] Success story case studies
+- [ ] Contributing guidelines
 
-### Next Steps
-1. [ ] Create trial accounts for both
-2. [ ] Test implementation complexity
-3. [ ] Evaluate pricing for expected scale
-4. [ ] Make decision
-5. [ ] Implement chosen solution
+## Security Enhancements
 
-### Estimated Effort
-- Research & Decision: 1-2 days
-- Implementation: 2-3 days
-- Testing: 1 day
-- Total: ~1 week
+- [ ] Add CORS configuration options
+- [ ] Implement API key authentication option
+- [ ] Add request signing/verification
+- [ ] Security headers middleware
+- [ ] Audit logging for sensitive operations
+- [ ] Secrets rotation automation
 
-### Keep in Mind
-- Current token validation logic is good - keep it!
-- The architecture is already well-structured for this change
-- Start simple, add features as needed
+## Monitoring & Observability
+
+- [ ] OpenTelemetry integration
+- [ ] Distributed tracing
+- [ ] Custom metrics dashboard
+- [ ] Error tracking (Sentry integration)
+- [ ] Performance monitoring
+- [ ] SLA tracking
+
+## Nice to Have
+
+- [ ] Web UI for server management
+- [ ] GraphQL endpoint option
+- [ ] OpenAPI/Swagger documentation
+- [ ] Postman collection generation
+- [ ] VS Code extension for development
+- [ ] GitHub Actions for CI/CD
+- [ ] Automated dependency updates
+
+## Decision Points
+
+### Should We Add?
+1. **Database ORM** - Prisma vs TypeORM vs raw SQL?
+2. **Message Queue** - For async operations?
+3. **Admin Panel** - For non-technical users?
+4. **Multi-tenancy** - Isolated tool sets per tenant?
+5. **Billing/Usage Tracking** - For SaaS deployments?
+
+### Technology Choices
+- Stick with Express or migrate to Fastify?
+- Add tRPC for type-safe APIs?
+- Consider Bun runtime for performance?
+- Add Zod for runtime validation?
+
+## Contributing
+
+Want to help? Pick any item from this list and:
+1. Open an issue to discuss the approach
+2. Submit a PR with your implementation
+3. Update docs and add tests
+
+Focus on keeping the starter kit simple while making it powerful. Every feature should have a clear use case and not add unnecessary complexity.

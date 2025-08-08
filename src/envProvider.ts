@@ -65,7 +65,7 @@ class EnvProvider {
       PUBLIC_URL: process.env.PUBLIC_URL,
       
       // MCP Configuration
-      MCP_SERVER_NAME: process.env.MCP_SERVER_NAME || 'mcp-server-sandbox',
+      MCP_SERVER_NAME: process.env.MCP_SERVER_NAME || 'mcp-server-starter',
       MCP_SERVER_VERSION: process.env.MCP_SERVER_VERSION || '1.0.0',
       PORT: process.env.PORT || '3000',
       TRANSPORT_TYPE: (transportType === 'stdio' ? 'stdio' : 'http') as 'stdio' | 'http',

@@ -1,69 +1,87 @@
-Let me explain Dynamic Client Registration (DCR) and why MCP Inspector requires it:
+# Dynamic Client Registration (DCR) Explained
 
-Traditional OAuth vs Dynamic Client Registration
+## What is DCR?
 
-Traditional OAuth (Pre-registration)
+Dynamic Client Registration allows OAuth clients to register themselves automatically, without manual setup.
 
-In traditional OAuth flows, you must manually register your application before using it:
+## Traditional OAuth vs DCR
 
-1. Go to provider's dashboard (e.g., Google Cloud Console)
-2. Create an application manually
-3. Get client_id and client_secret
-4. Configure these credentials in your app
+### Traditional OAuth (Manual Registration)
+1. Go to provider's dashboard (e.g., Google Console)
+2. Manually create an application
+3. Copy client_id and client_secret
+4. Configure these in your app
 
-Example: When you set up Google OAuth, you manually created:
-OAUTH_CLIENT_ID=your-client-id-from-google-console
-OAUTH_CLIENT_SECRET=your-client-secret-from-google-console
+```bash
+OAUTH_CLIENT_ID=manually-copied-from-console
+OAUTH_CLIENT_SECRET=manually-copied-from-console
+```
 
-Dynamic Client Registration (DCR)
+### Dynamic Client Registration
+1. Client discovers registration endpoint
+2. Client sends registration request
+3. Server generates credentials automatically
+4. Client uses credentials immediately
 
-With DCR, clients can register themselves automatically:
+```javascript
+// Automatic registration
+POST /oauth/register
+{ "redirect_uris": ["http://localhost:5173/callback"] }
 
-1. Client discovers the registration endpoint
-2. Client sends registration request with its metadata
-3. Server generates client_id and client_secret
-4. Client uses these credentials immediately
+// Response
+{ "client_id": "generated_id", "client_secret": "generated_secret" }
+```
 
-Why MCP Inspector Needs DCR
+## Why MCP Inspector Needs DCR
 
-MCP Inspector is a generic testing tool that needs to work with any MCP server:
+MCP Inspector is a testing tool that needs to work with ANY MCP server without manual configuration:
 
+```
 ┌─────────────────┐         ┌─────────────────┐
 │  MCP Inspector  │ ──────> │   Your Server   │
 └─────────────────┘         └─────────────────┘
-│                           │
-▼                           ▼
+        │                           │
+        ▼                           ▼
 "I need credentials"        "Here's how to register"
-│                           │
-▼                           ▼
+        │                           │
+        ▼                           ▼
 POST /oauth/register        Returns client_id/secret
-│                           │
-▼                           ▼
-"Now I can authenticate!"   "Proceed with OAuth flow"
+        │                           │
+        ▼                           ▼
+"Now I can test!"          "Proceed with OAuth"
+```
 
-Without DCR, MCP Inspector would need:
-- Pre-configured credentials for every server
-- Manual setup for each test
-- Different configurations per server
+## Implementation in This Starter
 
-With DCR, MCP Inspector can:
-- Test any OAuth-enabled server automatically
-- Register itself on-the-fly
-- Work without manual configuration
+This starter implements DCR to support MCP Inspector:
 
-The Flow in Practice
+1. **Registration Endpoint**: `/oauth/register` - Accepts client registration
+2. **Dynamic Clients**: Generated client credentials stored in memory
+3. **OAuth Proxy**: Bridges between dynamic clients and Google OAuth
+4. **Metadata Endpoint**: `/.well-known/oauth-authorization-server` - Advertises capabilities
 
-# 1. Inspector discovers your server has OAuth
+## Benefits
+
+- **Zero Configuration Testing**: MCP Inspector works immediately
+- **Automated Testing**: No manual credential setup
+- **Multi-client Support**: Each test run gets unique credentials
+- **Security**: Credentials are temporary and isolated
+
+## The Flow
+
+```bash
+# 1. Inspector discovers OAuth support
 GET /.well-known/oauth-authorization-server
-Response: { "registration_endpoint": "/oauth/register", ... }
+→ { "registration_endpoint": "/oauth/register" }
 
 # 2. Inspector registers itself
 POST /oauth/register
-Body: { "redirect_uris": ["http://localhost:5173/callback"], ... }
-Response: { "client_id": "mcp_12345", "client_secret": "abc123" }
+→ { "client_id": "mcp_12345", "client_secret": "secret" }
 
-# 3. Inspector uses these credentials for OAuth
-GET /oauth/authorize?client_id=mcp_12345&redirect_uri=...
+# 3. Inspector uses credentials for OAuth
+GET /oauth/authorize?client_id=mcp_12345
 
-This is why your initial OAuth proxy failed - MCP Inspector expected to register itself dynamically, but your server only supported pre-registered Google credentials. By adding DCR, you
-made your server compatible with MCP Inspector's automated testing workflow.
+# 4. Normal OAuth flow continues
+```
+
+This is why MCP Inspector can test your OAuth-protected server without any manual configuration!

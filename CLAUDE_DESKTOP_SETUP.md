@@ -1,6 +1,6 @@
 # Claude Desktop Setup Guide
 
-This guide explains how to configure Claude Desktop to use the MCP Server Sandbox in stdio mode.
+This guide explains how to configure Claude Desktop to use the MCP Server Starter in stdio mode.
 
 ## Prerequisites
 
@@ -33,13 +33,13 @@ The configuration should look like this:
 ```json
 {
   "mcpServers": {
-    "mcp-server-sandbox": {
+    "mcp-server-starter": {
       "command": "tsx",
       "args": [
-        "/Users/anatoly/Developer/git/mcp-server-sandbox/src/server.ts"
+        "/Users/anatoly/Developer/git/mcp-server-starter/src/server.ts"
       ],
       "env": {
-        "MCP_SERVER_NAME": "mcp-server-sandbox",
+        "MCP_SERVER_NAME": "mcp-server-starter",
         "MCP_SERVER_VERSION": "1.0.0",
         "TRANSPORT_TYPE": "stdio"
       }
@@ -105,7 +105,7 @@ The configuration now includes all environment variables directly, so no .env fi
 You can test the server manually before using with Claude Desktop:
 
 ```bash
-MCP_SERVER_NAME=mcp-server-sandbox MCP_SERVER_VERSION=1.0.0 TRANSPORT_TYPE=stdio tsx src/server.ts
+MCP_SERVER_NAME=mcp-server-starter MCP_SERVER_VERSION=1.0.0 TRANSPORT_TYPE=stdio tsx src/server.ts
 ```
 
 Type some JSON-RPC commands to verify it's working:

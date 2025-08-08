@@ -1,212 +1,292 @@
-# MCP Server Sandbox
+# MCP Server Starter Kit
 
-A basic Model Context Protocol (MCP) server implementation with Google OAuth support.
+Production-ready Model Context Protocol server with batteries included.  
+Fork, extend, deploy. No bullshit.
 
-## Features
+## What This Is
 
-- Google OAuth integration (optional)
-- Basic MCP commands for testing
-- Stateless architecture
-- Environment-based configuration
-- Configurable transport (HTTP or stdio)
-- Easy to extend
+- ✅ **Working MCP server** with auth, logging, and security out of the box
+- ✅ **Extensible registry pattern** for tools, resources, and prompts  
+- ✅ **Multiple transports** configured (HTTP with SSE, stdio for Claude Desktop)
+- ✅ **Production middleware** - OAuth 2.0, IP filtering, email filtering, structured logging
+- ✅ **TypeScript** with proper error handling and modular architecture
+- ✅ **Pino logging** - structured JSON logs that don't interfere with stdio
 
-## Setup
+## What This Isn't
 
-1. Install tsx globally (required for Claude Desktop):
+- ❌ **Not a framework** - no coding conventions forced on you
+- ❌ **Not bare boilerplate** - actually works out of the box  
+- ❌ **Not a library** - you fork and own your copy
+
+## Get Started in 2 Minutes
+
+### Prerequisites
+
 ```bash
+# Install pnpm if you haven't already
+npm install -g pnpm
+
+# For Claude Desktop support
 npm install -g tsx
 ```
 
-2. Install dependencies:
-```bash
-pnpm install
-```
+### Quick Start
 
-3. Create environment files based on the examples:
 ```bash
-# For HTTP transport (default)
+# Clone and install
+git clone https://github.com/anatoly314/mcp-server-starter.git
+cd mcp-server-starter
+pnpm install
+
+# Copy environment config
 cp .env.http.example .env.http
 
-# For STDIO transport
-cp .env.stdio.example .env.stdio
-```
-
-3. Configure authentication (optional):
-   - Set `AUTH_ENABLED=true` in `.env.http` to enable authentication
-   - If authentication is enabled:
-     - Go to [Google Cloud Console](https://console.cloud.google.com/)
-     - Create a new project or select an existing one
-     - Enable Google+ API
-     - Create OAuth 2.0 credentials
-     - **IMPORTANT**: Add `http://localhost:3000/oauth/callback` to the authorized redirect URIs in Google Cloud Console
-     - Add your `OAUTH_CLIENT_ID` and `OAUTH_CLIENT_SECRET` to `.env.http`
-   - If `AUTH_ENABLED=false`, authentication tools won't be available
-
-## Running the Server
-
-### HTTP Transport (default)
-```bash
-# Using npm scripts
+# Start the server
 pnpm run dev:http
-
-# Or manually
-DOTENV_CONFIG_PATH=.env.http tsx watch -r dotenv/config src/server.ts
 ```
 
-The server will start on `http://localhost:3000/mcp` by default.
+Server runs at `http://localhost:3000/mcp` with:
+- Echo tool (for testing)
+- Timestamp tool
+- System info resource
+- Auth status resource
+- Three code-related prompts
 
-### Stdio Transport
+## Production Features Built-In
+
+### 🔐 Security
+- **Google OAuth 2.0** - Full OAuth flow with token validation and caching
+- **IP Filtering** - Restrict access by IP ranges (supports Cloudflare headers)
+- **Email Filtering** - Whitelist specific emails for access control
+- **Bearer Token Auth** - Standard HTTP Authorization header support
+
+### 📊 Observability
+- **Structured Logging** - Pino with JSON output to stderr
+- **Request Logging** - HTTP middleware with request/response details
+- **Error Tracking** - Proper error boundaries and logging
+
+### 🏗️ Architecture
+- **Registry Pattern** - Easy to add new tools/resources/prompts
+- **Dependency Injection Ready** - Clean constructor patterns (no DI framework bloat)
+- **Transport Agnostic** - Same MCP server works with HTTP and stdio
+- **Environment-based Config** - All configuration via env vars
+
+## Adding Your Own Features
+
+### Add a New Tool
+
+Create a new tool in `src/mcp/tools/`:
+
+```typescript
+// src/mcp/tools/my-tool/MyTool.ts
+import { BaseTool, ToolDefinition } from '../types';
+
+export class MyTool extends BaseTool {
+  definition: ToolDefinition = {
+    name: 'my_tool',
+    description: 'Does something useful',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        input: { type: 'string' }
+      },
+      required: ['input']
+    }
+  };
+
+  async execute(args: any): Promise<CallToolResult> {
+    // Your implementation here
+    return {
+      content: [{
+        type: 'text',
+        text: `Result: ${args.input}`
+      }]
+    };
+  }
+}
+```
+
+Register it in `src/mcp/tools/index.ts`:
+
+```typescript
+import { MyTool } from './my-tool/MyTool';
+
+export function createToolRegistry(): ToolRegistry {
+  const registry = new ToolRegistry();
+  
+  // Existing tools
+  registry.register(new EchoTool());
+  registry.register(new TimestampTool());
+  
+  // Your new tool
+  registry.register(new MyTool());
+  
+  return registry;
+}
+```
+
+### Add a New Resource
+
+Similar pattern for resources in `src/mcp/resources/`.
+
+### Add a New Prompt
+
+Similar pattern for prompts in `src/mcp/prompts/`.
+
+## Configuration
+
+### Environment Variables
+
 ```bash
-# Using npm scripts
-pnpm run dev:stdio
+# Server Configuration
+MCP_SERVER_NAME=my-mcp-server
+MCP_SERVER_VERSION=1.0.0
+TRANSPORT_TYPE=http          # or stdio
+HTTP_HOST=0.0.0.0
+HTTP_PORT=3000
 
-# Or manually
-DOTENV_CONFIG_PATH=.env.stdio tsx watch -r dotenv/config src/server.ts
+# OAuth Configuration (optional)
+AUTH_ENABLED=true
+OAUTH_CLIENT_ID=your-google-client-id
+OAUTH_CLIENT_SECRET=your-google-client-secret
+PUBLIC_URL=https://your-domain.com
+
+# Security (optional)
+FILTER_BY_IP=192.168.1.0/24,10.0.0.1
+ALLOWED_EMAILS=user@example.com,admin@company.org
+
+# Logging
+LOG_LEVEL=info               # debug, info, warn, error
+REQUEST_LOGGING=true
 ```
 
-## Available Tools
+## Deployment
 
-### Authentication Tools (only available when AUTH_ENABLED=true)
-- `get_auth_url` - Generate Google OAuth authentication URL
-- `exchange_code` - Exchange authorization code for tokens
-- `get_user_info` - Get user information from Google
-
-### Basic Tools (always available)
-- `echo` - Simple echo command for testing
-- `get_timestamp` - Get current timestamp in various formats
-
-## Available Resources
-
-- `auth://status` - Current authentication configuration status
-
-## Using with Claude Desktop
-
-See [CLAUDE_DESKTOP_SETUP.md](./CLAUDE_DESKTOP_SETUP.md) for detailed setup instructions.
-
-Quick setup:
+### Local Development
 ```bash
-# 1. Copy the configuration
-cp claude_desktop_config.json ~/Library/Application\ Support/Claude/claude_desktop_config.json
-
-# 2. Restart Claude Desktop
+pnpm run dev:http    # HTTP transport with hot reload
+pnpm run dev:stdio   # Stdio transport for Claude Desktop
 ```
 
-Note: HTTP transport is not currently supported in Claude Desktop.
+### Production Build
+```bash
+pnpm run build       # Compile TypeScript
+node dist/server.js  # Run compiled server
+```
 
-## Architecture
+### Docker
+```dockerfile
+FROM node:20-slim
+RUN npm install -g pnpm
+WORKDIR /app
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+COPY . .
+RUN pnpm run build
+CMD ["node", "dist/server.js"]
+```
+
+### Cloud Deployment
+
+Works with any Node.js hosting:
+- **Railway** - One-click deploy
+- **Render** - Automatic SSL
+- **Fly.io** - Global distribution
+- **AWS/GCP/Azure** - Enterprise scale
+
+## Testing
+
+### MCP Inspector
+```bash
+# Start server for Inspector
+pnpm run inspector:stdio
+
+# Or test HTTP endpoint manually
+pnpm run dev:http
+```
+
+### Manual Testing
+```bash
+# Test with curl
+curl -X POST http://localhost:3000/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
+```
+
+## Architecture Overview
 
 ```
 src/
-├── server.ts                 # Main entry point
+├── server.ts                 # Entry point
 ├── envProvider.ts           # Environment configuration
-├── logger.ts                # Logger configuration (outputs to stderr)
-├── auth/                    # OAuth providers
-│   ├── OAuthProvider.ts     # OAuth provider interface
-│   ├── OAuthFactory.ts      # Provider factory
-│   ├── googleOAuth.ts       # Google OAuth implementation
-│   └── customOAuth.ts       # Generic OAuth implementation
-├── oauth/                   # OAuth proxy server
-│   └── OAuthProxyRouter.ts  # OAuth proxy endpoints
-├── mcp/                     # MCP server components
-│   ├── MCPServer.ts         # MCP server setup
+├── logger.ts                # Pino logger setup
+├── mcp/                     # MCP implementation
+│   ├── MCPServer.ts         # Core MCP server
+│   ├── tools/               # Tool implementations
+│   │   ├── ToolRegistry.ts  # Tool registry
+│   │   ├── types.ts         # Base types
+│   │   └── echo/            # Example tool
+│   ├── resources/           # Resource implementations
+│   │   └── ResourceRegistry.ts
+│   ├── prompts/             # Prompt implementations
+│   │   └── PromptRegistry.ts
 │   └── handlers/            # Request handlers
-│       ├── toolHandlers.ts  # Tool implementations
-│       └── resourceHandlers.ts # Resource implementations
 ├── http/                    # HTTP transport
-│   └── HTTPServer.ts        # Express server setup
-└── stdio/                   # Stdio transport
-    └── StdioServer.ts       # Stdio server setup
+│   ├── HTTPServer.ts        # Express server
+│   ├── authMiddleware.ts    # OAuth validation
+│   ├── emailFilterMiddleware.ts
+│   └── ipFilterMiddleware.ts
+├── stdio/                   # Stdio transport
+│   └── StdioServer.ts
+├── oauth/                   # OAuth proxy
+│   └── OAuthProxyServer.ts
+└── auth/                    # Auth providers
+    └── providers/
+        └── google/
 ```
 
-### Key Design Principles
+## Why Use This?
 
-1. **Modular Architecture**: Each component has a single responsibility
-2. **Provider Pattern**: OAuth providers are pluggable via the factory pattern
-3. **Environment-based Configuration**: All config comes from environment variables
-4. **Transport Agnostic**: MCP server works with both HTTP and stdio transports
-5. **OAuth Flexibility**: Supports both Google OAuth and custom OAuth providers
-6. **Proper Logging**: All logs go to stderr to keep stdout clean for protocol communication
+### vs. Building from Scratch
+- **Save 2-3 weeks** of setup and boilerplate
+- **Production patterns** already implemented
+- **Security** handled correctly from day one
 
-## Development
+### vs. Other MCP Starters
+- **Actually production-ready** - not a toy example
+- **Batteries included** - auth, logging, security work out of the box
+- **No framework lock-in** - just clean TypeScript you can modify
 
-### Adding New Tools
+### vs. MCP Libraries
+- **You own the code** - no black box dependencies
+- **Customizable** - change anything you need
+- **Learnable** - see how everything works
 
-1. Edit `src/mcp/handlers/toolHandlers.ts`
-2. Add tool definition in `handleListTools()`
-3. Add tool implementation in `handleCallTool()`
+## Common Use Cases
 
-### Adding New Resources
+This starter kit is perfect for:
 
-1. Edit `src/mcp/handlers/resourceHandlers.ts`
-2. Add resource definition in `handleListResources()`
-3. Add resource implementation in `handleReadResource()`
+- **AI Tool Integration** - Add your company's internal tools to Claude
+- **API Gateways** - Expose existing APIs through MCP
+- **Data Access Layers** - Provide LLMs access to your databases
+- **Workflow Automation** - Build conversational interfaces to complex systems
+- **Custom Assistants** - Create specialized AI agents with specific capabilities
 
-### Adding OAuth Providers
+## Documentation
 
-1. Create new provider in `src/auth/` implementing `OAuthProvider` interface
-2. Update `OAuthFactory.ts` to include your provider
-3. Set `OAUTH_PROVIDER=yourprovider` in `.env.http`
+- [Claude Desktop Setup](./CLAUDE_DESKTOP_SETUP.md) - Use with Claude Desktop app
+- [Google OAuth Setup](./GOOGLE_OAUTH_SETUP.md) - Configure authentication
+- [Environment Setup](./ENV_SETUP.md) - Configuration guide
+- [OAuth Architecture](./MCP_SPEC_COMPLIANT_AUTH.md) - How auth works
 
-## Troubleshooting OAuth
+## Contributing
 
-### Error 400: redirect_uri_mismatch
+This is a starter kit - fork it and make it your own! If you build something cool, let the community know.
 
-If you see this error when trying to authenticate:
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Navigate to APIs & Services > Credentials
-3. Click on your OAuth 2.0 Client ID
-4. Add `http://localhost:3000/oauth/callback` to "Authorized redirect URIs"
-5. Save the changes
+## License
 
-The redirect URI in Google Cloud Console must exactly match the redirect URI derived from your `PUBLIC_URL` in `.env.http` (defaults to `http://localhost:3000/oauth/callback`).
+MIT - Use this however you want.
 
-## Testing with MCP Inspector
+---
 
-The project includes MCP Inspector for testing. First, start the server:
-
-```bash
-# Start HTTP server (for manual HTTP connection in Inspector)
-pnpm run dev:http
-
-# Or use Inspector with stdio transport
-pnpm run inspector:stdio
-```
-
-Note: HTTP transport configuration in MCP Inspector config files is not yet fully supported. You can either:
-- Use stdio transport: `pnpm run inspector:stdio`
-- Start HTTP server manually and configure the connection in Inspector GUI
-
-## OAuth Proxy Implementation
-
-This server implements a complete OAuth proxy that makes it compatible with MCP Inspector:
-
-- **Registration Endpoint**: `/oauth/register` - Dynamic client registration (DCR)
-- **Authorization Endpoint**: `/oauth/authorize` - Redirects to Google OAuth
-- **Token Endpoint**: `/oauth/token` - Exchanges codes/tokens with Google
-- **Callback Endpoint**: `/oauth/callback` - Handles Google's OAuth callback
-
-The proxy supports:
-- Dynamic client registration (required by MCP Inspector)
-- PKCE (Proof Key for Code Exchange) with S256 and plain methods
-- Client credential validation
-- State management for OAuth flows
-- Transparent forwarding to Google OAuth
-
-This allows you to test the full OAuth flow in MCP Inspector while using Google as the actual identity provider.
-
-## Testing HTTP Transport with curl
-
-You can also test the HTTP transport using curl:
-
-```bash
-# Initialize
-curl -X POST http://localhost:3000/mcp \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{}}}'
-
-# Call echo tool
-curl -X POST http://localhost:3000/mcp \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"echo","arguments":{"message":"Hello!"}}}'
-```
+Built with ❤️ and minimal bullshit. Stop configuring, start shipping.
