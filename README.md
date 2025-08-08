@@ -175,16 +175,18 @@ node dist/server.js  # Run compiled server
 ```
 
 ### Docker
-```dockerfile
-FROM node:20-slim
-RUN npm install -g pnpm
-WORKDIR /app
-COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
-COPY . .
-RUN pnpm run build
-CMD ["node", "dist/server.js"]
+
+Production-ready Docker image with multi-stage build:
+
+```bash
+# Build
+docker build -t mcp-server-starter .
+
+# Run
+docker run -p 3000:3000 --env-file .env.http mcp-server-starter
 ```
+
+See [DOCKER.md](./DOCKER.md) for detailed Docker deployment guide.
 
 ### Cloud Deployment
 

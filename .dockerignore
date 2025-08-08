@@ -1,0 +1,17 @@
+node_modules
+dist
+.git
+.gitignore
+.env*
+*.md
+.vscode
+.idea
+*.log
+npm-debug.log*
+.DS_Store
+coverage
+.nyc_output
+.github
+k8s
+claude_desktop_config.json
+mcp-inspector-config.json
