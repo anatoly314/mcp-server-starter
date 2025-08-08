@@ -23,6 +23,7 @@ interface EnvironmentConfig {
   
   // Security Configuration
   FILTER_BY_IP?: string;
+  ALLOWED_EMAILS?: string;
 }
 
 class EnvProvider {
@@ -72,7 +73,8 @@ class EnvProvider {
       HTTP_PORT: process.env.HTTP_PORT || '3000',
       
       // Security Configuration
-      FILTER_BY_IP: process.env.FILTER_BY_IP
+      FILTER_BY_IP: process.env.FILTER_BY_IP,
+      ALLOWED_EMAILS: process.env.ALLOWED_EMAILS
     };
   }
 
@@ -171,6 +173,10 @@ class EnvProvider {
 
   get filterByIp(): string | undefined {
     return this.config.FILTER_BY_IP;
+  }
+
+  get allowedEmails(): string | undefined {
+    return this.config.ALLOWED_EMAILS;
   }
 
   getAll(): EnvironmentConfig {

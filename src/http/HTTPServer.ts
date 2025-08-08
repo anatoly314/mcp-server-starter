@@ -6,6 +6,7 @@ import { envProvider } from '../envProvider';
 import { authMiddleware } from './authMiddleware';
 import { loggingMiddleware } from './loggingMiddleware';
 import { ipFilterMiddleware } from './ipFilterMiddleware';
+import { emailFilterMiddleware } from './emailFilterMiddleware';
 import { createLogger } from '../logger';
 
 const logger = createLogger('http');
@@ -41,6 +42,9 @@ export class HTTPServer {
     
     // Apply auth middleware globally if AUTH_ENABLED=true
     this.app.use(authMiddleware);
+    
+    // Apply email filter AFTER auth (needs user info from auth)
+    this.app.use(emailFilterMiddleware);
   }
 
   getApp(): Express {
@@ -91,6 +95,9 @@ export class HTTPServer {
       }
       if (envProvider.filterByIp) {
         logger.info({ allowedIps: envProvider.filterByIp }, 'IP filtering is ENABLED');
+      }
+      if (envProvider.allowedEmails) {
+        logger.info({ allowedEmails: envProvider.allowedEmails }, 'Email filtering is ENABLED');
       }
     });
   }
