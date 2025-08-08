@@ -6,7 +6,7 @@ import {
   ErrorCode,
   McpError
 } from '@modelcontextprotocol/sdk/types.js';
-import { ResourceRegistry } from '../resources/index.js';
+import { ResourceRegistry } from '../capabilities/resources/index.js';
 
 export class ResourceHandlers {
   constructor(private readonly resourceRegistry: ResourceRegistry) {}

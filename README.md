@@ -75,10 +75,10 @@ Server runs at `http://localhost:3000/mcp` with:
 
 ### Add a New Tool
 
-Create a new tool in `src/mcp/tools/`:
+Create a new tool in `src/mcp/capabilities/tools/`:
 
 ```typescript
-// src/mcp/tools/my-tool/MyTool.ts
+// src/mcp/capabilities/tools/my-tool/MyTool.ts
 import { BaseTool, ToolDefinition } from '../types';
 
 export class MyTool extends BaseTool {
@@ -106,7 +106,7 @@ export class MyTool extends BaseTool {
 }
 ```
 
-Register it in `src/mcp/tools/index.ts`:
+Register it in `src/mcp/capabilities/tools/index.ts`:
 
 ```typescript
 import { MyTool } from './my-tool/MyTool';
@@ -127,11 +127,11 @@ export function createToolRegistry(): ToolRegistry {
 
 ### Add a New Resource
 
-Similar pattern for resources in `src/mcp/resources/`.
+Similar pattern for resources in `src/mcp/capabilities/resources/`.
 
 ### Add a New Prompt
 
-Similar pattern for prompts in `src/mcp/prompts/`.
+Similar pattern for prompts in `src/mcp/capabilities/prompts/`.
 
 ## Configuration
 
@@ -222,15 +222,17 @@ src/
 ├── logger.ts                # Pino logger setup
 ├── mcp/                     # MCP implementation
 │   ├── MCPServer.ts         # Core MCP server
-│   ├── tools/               # Tool implementations
-│   │   ├── ToolRegistry.ts  # Tool registry
-│   │   ├── types.ts         # Base types
-│   │   └── echo/            # Example tool
-│   ├── resources/           # Resource implementations
-│   │   └── ResourceRegistry.ts
-│   ├── prompts/             # Prompt implementations
-│   │   └── PromptRegistry.ts
-│   └── handlers/            # Request handlers
+│   ├── handlers/            # Request handlers (orchestration)
+│   └── capabilities/        # MCP capabilities
+│       ├── tools/           # Tool implementations
+│       │   ├── ToolRegistry.ts
+│       │   └── echo/        # Example tool
+│       ├── resources/       # Resource implementations
+│       │   ├── ResourceRegistry.ts
+│       │   └── auth/        # Auth status resource
+│       └── prompts/         # Prompt implementations
+│           ├── PromptRegistry.ts
+│           └── code-review/ # Example prompt
 ├── http/                    # HTTP transport
 │   ├── HTTPServer.ts        # Express server
 │   ├── authMiddleware.ts    # OAuth validation

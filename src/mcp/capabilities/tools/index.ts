@@ -1,7 +1,7 @@
 import { ToolRegistry } from './ToolRegistry.js';
 import { EchoTool } from './echo/EchoTool.js';
 import { TimestampTool } from './timestamp/TimestampTool.js';
-import { createLogger } from '../../logger.js';
+import { createLogger } from '../../../logger.js';
 
 const logger = createLogger('tools');
 

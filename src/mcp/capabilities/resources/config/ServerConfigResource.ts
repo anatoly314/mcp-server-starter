@@ -1,6 +1,6 @@
 import { ReadResourceResult } from '@modelcontextprotocol/sdk/types.js';
 import { BaseResource, ResourceDefinition } from '../types.js';
-import { envProvider } from '../../../envProvider.js';
+import { envProvider } from '../../../../envProvider.js';
 
 export class ServerConfigResource extends BaseResource {
   definition: ResourceDefinition = {

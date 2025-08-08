@@ -2,7 +2,7 @@ import { ResourceRegistry } from './ResourceRegistry.js';
 import { AuthStatusResource } from './auth/AuthStatusResource.js';
 import { SystemInfoResource } from './system/SystemInfoResource.js';
 import { ServerConfigResource } from './config/ServerConfigResource.js';
-import { createLogger } from '../../logger.js';
+import { createLogger } from '../../../logger.js';
 
 const logger = createLogger('resources');
 

@@ -2,7 +2,7 @@ import { PromptRegistry } from './PromptRegistry.js';
 import { CodeReviewPrompt } from './code-review/CodeReviewPrompt.js';
 import { ExplainCodePrompt } from './explain-code/ExplainCodePrompt.js';
 import { GenerateTestPrompt } from './generate-test/GenerateTestPrompt.js';
-import { createLogger } from '../../logger.js';
+import { createLogger } from '../../../logger.js';
 
 const logger = createLogger('prompts');
 

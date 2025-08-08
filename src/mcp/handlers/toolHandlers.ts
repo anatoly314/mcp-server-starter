@@ -6,7 +6,7 @@ import {
   ErrorCode,
   McpError 
 } from '@modelcontextprotocol/sdk/types.js';
-import { ToolRegistry } from '../tools';
+import { ToolRegistry } from '../capabilities/tools';
 
 export class ToolHandlers {
   constructor(private readonly toolRegistry: ToolRegistry) {}
