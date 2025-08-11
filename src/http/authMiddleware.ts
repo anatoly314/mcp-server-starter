@@ -1,9 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import { envProvider } from '../envProvider';
-import { googleTokenValidator } from '../auth/providers/google/GoogleTokenValidator';
 import { createLogger } from '../logger';
 
 const logger = createLogger('auth-middleware');
+
+// Simple token cache to avoid hitting userinfo endpoint on every request
+const tokenCache = new Map<string, { userInfo: any; timestamp: number }>();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
   // Skip auth for OAuth proxy endpoints
@@ -27,12 +30,44 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
   const token = authHeader.substring(7); // Remove 'Bearer ' prefix
 
   try {
-    // Validate token with Google (spec compliant)
-    const userInfo = await googleTokenValidator.getUserInfo(token);
+    // Check cache first
+    const cached = tokenCache.get(token);
+    if (cached && (Date.now() - cached.timestamp < CACHE_TTL)) {
+      (req as any).user = cached.userInfo;
+      (req as any).accessToken = token;
+      return next();
+    }
+
+    // Validate token by calling the userinfo endpoint
+    const response = await fetch(envProvider.oauthUserInfoUrl, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Token validation failed: ${response.status}`);
+    }
+
+    const userInfo = await response.json();
+    
+    // Cache the result
+    tokenCache.set(token, { userInfo, timestamp: Date.now() });
+    
+    // Clean up old cache entries periodically
+    if (tokenCache.size > 1000) {
+      const now = Date.now();
+      for (const [key, value] of tokenCache.entries()) {
+        if (now - value.timestamp > CACHE_TTL) {
+          tokenCache.delete(key);
+        }
+      }
+    }
     
     // Attach user info to request for downstream use
     (req as any).user = userInfo;
-    (req as any).googleAccessToken = token;
+    (req as any).accessToken = token;
     
     next();
   } catch (error: any) {

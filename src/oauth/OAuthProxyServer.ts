@@ -1,7 +1,6 @@
 import { Express } from 'express';
-import { OAuthProxyRouter } from './OAuthProxyRouter';
+import { createMcpOAuthRouter } from './mcpSdkOAuth';
 import { envProvider } from '../envProvider';
-import { dynamicOAuthMetadataMiddleware } from './dynamicOAuthMetadata';
 import { createLogger } from '../logger';
 
 const logger = createLogger('oauth-proxy-server');
@@ -14,14 +13,11 @@ export class OAuthProxyServer {
   }
 
   setup() {
-    // Setup dynamic OAuth metadata endpoints
-    this.app.use(dynamicOAuthMetadataMiddleware);
-
-    // Setup OAuth proxy routes
-    const oauthRouter = new OAuthProxyRouter();
-    this.app.use(oauthRouter.getRouter());
+    // Setup OAuth routes using MCP SDK
+    const oauthRouter = createMcpOAuthRouter();
+    this.app.use(oauthRouter);
 
     const baseUrl = envProvider.publicUrl || `http://${envProvider.httpHost}:${envProvider.httpPort}`;
-    logger.info({ baseUrl }, 'OAuth proxy server enabled - OAuth metadata dynamically available at [request-origin]/.well-known/oauth-protected-resource');
+    logger.info({ baseUrl }, 'OAuth proxy server enabled using MCP SDK - OAuth metadata available at /.well-known/oauth-protected-resource');
   }
 }

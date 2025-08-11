@@ -9,9 +9,9 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 import { ToolHandlers, ResourceHandlers, PromptHandlers } from './handlers';
 import { envProvider } from '../envProvider';
-import { createToolRegistry } from './capabilities/tools';
-import { createPromptRegistry } from './capabilities/prompts';
-import { createResourceRegistry } from './capabilities/resources';
+import { createToolRegistry } from './primitives/tools';
+import { createPromptRegistry } from './primitives/prompts';
+import { createResourceRegistry } from './primitives/resources';
 
 export class MCPServer {
   private readonly server: Server;
