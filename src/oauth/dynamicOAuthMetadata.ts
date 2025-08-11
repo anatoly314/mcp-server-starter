@@ -39,11 +39,13 @@ export function dynamicOAuthMetadataMiddleware(req: Request, res: Response, next
       resource_name: envProvider.mcpServerName
     });
   } else if (req.path === '/.well-known/oauth-authorization-server') {
-    // DCR removed - no registration_endpoint
+    // Include registration_endpoint for MCP Inspector compatibility
+    // The DCR endpoint returns fake credentials - actual auth uses hardcoded Google OAuth
     res.json({
       issuer: baseUrl,
       authorization_endpoint: `${baseUrl}/oauth/authorize`,
       token_endpoint: `${baseUrl}/oauth/token`,
+      registration_endpoint: `${baseUrl}/oauth/register`,  // DCR stub for MCP Inspector
       response_types_supported: ['code'],
       scopes_supported: envProvider.oauthScopes.split(' '),
       grant_types_supported: ['authorization_code', 'refresh_token'],

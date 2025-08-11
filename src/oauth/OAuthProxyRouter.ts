@@ -29,6 +29,27 @@ export class OAuthProxyRouter {
   }
 
   private setupRoutes() {
+    // Minimal DCR stub for MCP Inspector compatibility
+    // This returns fake credentials - actual auth uses hardcoded Google OAuth
+    this.router.post('/oauth/register', express.json(), (req, res) => {
+      const { redirect_uris } = req.body;
+      
+      // Return dummy client credentials for MCP Inspector
+      // These are never validated - we use hardcoded Google credentials
+      res.status(201).json({
+        client_id: 'mcp-inspector-client',
+        client_secret: 'not-used',  // Never actually used
+        redirect_uris: redirect_uris || [],
+        client_name: 'MCP Inspector Client',
+        grant_types: ['authorization_code'],
+        response_types: ['code'],
+        scope: envProvider.oauthScopes,
+        client_id_issued_at: Math.floor(Date.now() / 1000)
+      });
+      
+      logger.info('Returned dummy client for MCP Inspector compatibility');
+    });
+    
     // OAuth authorization endpoint
     this.router.get('/oauth/authorize', this.handleAuthorization.bind(this));
     

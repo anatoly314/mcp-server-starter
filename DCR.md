@@ -1,8 +1,8 @@
-# Dynamic Client Registration (DCR) - REMOVED
+# Dynamic Client Registration (DCR) - Stub Only
 
-## Update: DCR Has Been Removed
+## Update: DCR Simplified to Stub Implementation
 
-This MCP server no longer uses Dynamic Client Registration (DCR). The OAuth flow has been simplified to work directly with your configured Google OAuth credentials.
+This MCP server uses a minimal DCR stub for compatibility with MCP Inspector. The DCR endpoint returns fake credentials while actual authentication uses your configured Google OAuth credentials.
 
 ## Why DCR Was Removed
 
@@ -44,11 +44,24 @@ OAUTH_CLIENT_ID=your-google-client-id
 OAUTH_CLIENT_SECRET=your-google-client-secret
 ```
 
+## DCR Stub Implementation
+
+The `/oauth/register` endpoint returns fake credentials:
+```json
+{
+  "client_id": "mcp-inspector-client",
+  "client_secret": "not-used",
+  ...
+}
+```
+
+These credentials are never validated. All OAuth operations use your configured Google OAuth credentials.
+
 ## Compatibility
 
-- ✅ **Claude**: Fully supported (can specify custom client ID if needed)
+- ✅ **Claude**: Fully supported (ignores DCR)
 - ✅ **ChatGPT**: Works with hardcoded credentials
-- ✅ **MCP Inspector**: Should work without DCR
+- ✅ **MCP Inspector**: Works with DCR stub
 
 ## Benefits of Removal
 
