@@ -30,18 +30,18 @@ importers:
         specifier: ^9.0.2
         version: 9.0.2
       pino:
-        specifier: ^9.7.0
-        version: 9.7.0
+        specifier: ^9.8.0
+        version: 9.8.0
       pino-http:
         specifier: ^10.5.0
         version: 10.5.0
       pino-pretty:
-        specifier: ^13.0.0
+        specifier: ^13.1.1
         version: 13.1.1
     devDependencies:
       '@modelcontextprotocol/inspector':
-        specifier: ^0.15.0
-        version: 0.15.0(@types/node@24.1.0)(typescript@5.9.2)
+        specifier: ^0.16.2
+        version: 0.16.2(@types/node@24.1.0)(typescript@5.9.2)
       '@types/cors':
         specifier: ^2.8.19
         version: 2.8.19
@@ -54,9 +54,6 @@ importers:
       '@types/node':
         specifier: ^24.1.0
         version: 24.1.0
-      '@types/pino':
-        specifier: ^7.0.4
-        version: 7.0.5
       tsx:
         specifier: ^4.20.3
         version: 4.20.3
@@ -251,20 +248,21 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@modelcontextprotocol/inspector-cli@0.15.0':
-    resolution: {integrity: sha512-mZxRqxYub6qFi3oypLI63yCm9TAxlTO8asE9FeAU4+HFlvKxQrujcfpckcWjqGKhZ0uVH1YUE+VwDx70nz+I5w==}
+  '@modelcontextprotocol/inspector-cli@0.16.2':
+    resolution: {integrity: sha512-CqxrElv3RJBVGrJ9QIQ/Elw5z7f+SltxOzk0OI4KOb1IdkZ+4RNVnfvTD8Ius+dvVGpKZooQma2yZj34AKj3XQ==}
     hasBin: true
 
-  '@modelcontextprotocol/inspector-client@0.15.0':
-    resolution: {integrity: sha512-zIKxvp5HX1yE+kPOhI42/TVNuM9/RYEizdVmlpov7H38Mg9DeN9DptHYrsVLy8ZEJD1XFAu/eLl+ZtS3ceANNg==}
+  '@modelcontextprotocol/inspector-client@0.16.2':
+    resolution: {integrity: sha512-urS9dnT2gwMMQA5/E2cjwRC4S119xPTRKckQ751C+GtS6mtVmpvKHHh7CeKnb3SXB/3kak63dl4cPb6uW8AvnA==}
     hasBin: true
 
-  '@modelcontextprotocol/inspector-server@0.15.0':
-    resolution: {integrity: sha512-x1qtDEUeSHURtBH1/WN30NX7O/Imb3u2IoY+T2YCf4mGiB24eo4hEudiZmnuKSDGwDs4BAj2keiFeL3/EwkH9w==}
+  '@modelcontextprotocol/inspector-server@0.16.2':
+    resolution: {integrity: sha512-bnns/7q7s2NKU2BbwNIgw9QegaJ5eVcxjbnzsxWXUE9LqdLCLw1LTUs/E2bh+w0PTvE5pO2G1XMzoSFXsjG89Q==}
     hasBin: true
 
-  '@modelcontextprotocol/inspector@0.15.0':
-    resolution: {integrity: sha512-PN1R7InR48Y6wU8s/vHWc0KOYAjlYQkgCpjUQsNFB078ebdv+empkMI6d1Gg+UIRx8mTrwtbBgv0A6ookGG+0w==}
+  '@modelcontextprotocol/inspector@0.16.2':
+    resolution: {integrity: sha512-D7/DXVfvp+5e9Z2N2wFKe48TQx39FPpOg2jPWL0aK6vVNY0kBFFB9VX5QqNTN3ZADOyU4ukjMCJ5URXdKzSJfQ==}
+    engines: {node: '>=22.7.5'}
     hasBin: true
 
   '@modelcontextprotocol/sdk@1.17.1':
@@ -686,10 +684,6 @@ packages:
 
   '@types/node@24.1.0':
     resolution: {integrity: sha512-ut5FthK5moxFKH2T1CUOC6ctR67rQRvvHdFLCD2Ql6KXmMuCrjsSsRI9UsLCm9M18BMwClv4pn327UvB7eeO1w==}
-
-  '@types/pino@7.0.5':
-    resolution: {integrity: sha512-wKoab31pknvILkxAF8ss+v9iNyhw5Iu/0jLtRkUD74cNfOOLJNnqfFKAv0r7wVaTQxRZtWrMpGfShwwBjOcgcg==}
-    deprecated: This is a stub types definition. pino provides its own type definitions, so you do not need this installed.
 
   '@types/qs@6.14.0':
     resolution: {integrity: sha512-eOunJqu0K1923aExK6y8p6fsihYEn/BYuQ4g0CxAAgFc4b/ZLN4CrsRZ55srTdqoiLzU2B2evC+apEIxprEzkQ==}
@@ -1284,8 +1278,8 @@ packages:
   pino-std-serializers@7.0.0:
     resolution: {integrity: sha512-e906FRY0+tV27iq4juKzSYPbUj2do2X2JX4EzSca1631EB2QJQUqGbDuERal7LCtOpxl6x3+nvo9NPZcmjkiFA==}
 
-  pino@9.7.0:
-    resolution: {integrity: sha512-vnMCM6xZTb1WDmLvtG2lE/2p+t9hDEIvTWJsu6FejkE62vB7gDhvzrpFR4Cw2to+9JNQxVnkAKVPA1KPB98vWg==}
+  pino@9.8.0:
+    resolution: {integrity: sha512-L5+rV1wL7vGAcxXP7sPpN5lrJ07Piruka6ArXr7EWBXxdVWjJshGVX8suFsiusJVcGKDGUFfbgbnKdg+VAC+0g==}
     hasBin: true
 
   pkce-challenge@4.1.0:
@@ -1754,7 +1748,7 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.4
 
-  '@modelcontextprotocol/inspector-cli@0.15.0':
+  '@modelcontextprotocol/inspector-cli@0.16.2':
     dependencies:
       '@modelcontextprotocol/sdk': 1.17.1
       commander: 13.1.0
@@ -1762,7 +1756,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@modelcontextprotocol/inspector-client@0.15.0':
+  '@modelcontextprotocol/inspector-client@0.16.2':
     dependencies:
       '@modelcontextprotocol/sdk': 1.17.1
       '@radix-ui/react-checkbox': 1.3.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -1795,7 +1789,7 @@ snapshots:
       - supports-color
       - tailwindcss
 
-  '@modelcontextprotocol/inspector-server@0.15.0':
+  '@modelcontextprotocol/inspector-server@0.16.2':
     dependencies:
       '@modelcontextprotocol/sdk': 1.17.1
       cors: 2.8.5
@@ -1807,11 +1801,11 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@modelcontextprotocol/inspector@0.15.0(@types/node@24.1.0)(typescript@5.9.2)':
+  '@modelcontextprotocol/inspector@0.16.2(@types/node@24.1.0)(typescript@5.9.2)':
     dependencies:
-      '@modelcontextprotocol/inspector-cli': 0.15.0
-      '@modelcontextprotocol/inspector-client': 0.15.0
-      '@modelcontextprotocol/inspector-server': 0.15.0
+      '@modelcontextprotocol/inspector-cli': 0.16.2
+      '@modelcontextprotocol/inspector-client': 0.16.2
+      '@modelcontextprotocol/inspector-server': 0.16.2
       '@modelcontextprotocol/sdk': 1.17.1
       concurrently: 9.2.0
       open: 10.2.0
@@ -2189,10 +2183,6 @@ snapshots:
   '@types/node@24.1.0':
     dependencies:
       undici-types: 7.8.0
-
-  '@types/pino@7.0.5':
-    dependencies:
-      pino: 9.7.0
 
   '@types/qs@6.14.0': {}
 
@@ -2798,7 +2788,7 @@ snapshots:
   pino-http@10.5.0:
     dependencies:
       get-caller-file: 2.0.5
-      pino: 9.7.0
+      pino: 9.8.0
       pino-std-serializers: 7.0.0
       process-warning: 5.0.0
 
@@ -2820,7 +2810,7 @@ snapshots:
 
   pino-std-serializers@7.0.0: {}
 
-  pino@9.7.0:
+  pino@9.8.0:
     dependencies:
       atomic-sleep: 1.0.0
       fast-redact: 3.5.0

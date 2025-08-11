@@ -8,20 +8,9 @@ import { createLogger } from '../logger';
 
 const logger = createLogger('oauth-proxy');
 
-interface RegisteredClient {
-  client_id: string;
-  client_secret: string;
-  redirect_uris: string[];
-  client_name?: string;
-  grant_types: string[];
-  response_types: string[];
-  scope?: string;
-}
-
 interface PendingAuthorization {
   code_challenge?: string;
   code_challenge_method?: string;
-  client_id: string;
   redirect_uri: string;
   state?: string;
   google_code?: string;
@@ -30,20 +19,16 @@ interface PendingAuthorization {
 export class OAuthProxyRouter {
   private readonly router: Router;
   private oauthProvider: OAuthProvider;
-  private registeredClients: Map<string, RegisteredClient> = new Map();
   private pendingAuthorizations: Map<string, PendingAuthorization> = new Map();
 
   constructor() {
     this.router = Router();
     this.oauthProvider = OAuthFactory.createProvider();
     this.setupRoutes();
-    logger.info('OAuthProxyRouter initialized');
+    logger.info('OAuthProxyRouter initialized (DCR removed - using direct OAuth)');
   }
 
   private setupRoutes() {
-    // Dynamic client registration endpoint
-    this.router.post('/oauth/register', this.handleClientRegistration.bind(this));
-    
     // OAuth authorization endpoint
     this.router.get('/oauth/authorize', this.handleAuthorization.bind(this));
     
@@ -54,71 +39,9 @@ export class OAuthProxyRouter {
     this.router.get('/oauth/callback', this.handleCallback.bind(this));
   }
 
-  private async handleClientRegistration(req: Request, res: Response) {
-    try {
-      const {
-        redirect_uris,
-        client_name,
-        grant_types = ['authorization_code'],
-        response_types = ['code'],
-        scope
-      } = req.body;
-
-      // Validate required fields
-      if (!redirect_uris || !Array.isArray(redirect_uris) || redirect_uris.length === 0) {
-        return res.status(400).json({
-          error: 'invalid_redirect_uri',
-          error_description: 'redirect_uris is required and must be a non-empty array'
-        });
-      }
-
-      // Generate client credentials
-      const client_id = `mcp_${Date.now()}_${Math.random().toString(36).substring(7)}`;
-      const client_secret = Buffer.from(Math.random().toString()).toString('base64').substring(0, 32);
-
-      // Store the client
-      const client: RegisteredClient = {
-        client_id,
-        client_secret,
-        redirect_uris,
-        client_name: client_name || 'MCP Client',
-        grant_types,
-        response_types,
-        scope
-      };
-      this.registeredClients.set(client_id, client);
-
-      // Return client information
-      const response = {
-        client_id,
-        client_secret,
-        redirect_uris,
-        client_name: client.client_name,
-        grant_types,
-        response_types,
-        scope,
-        client_id_issued_at: Math.floor(Date.now() / 1000)
-      };
-
-      logger.info({
-        client_id,
-        redirect_uris,
-        total_clients: this.registeredClients.size
-      }, 'Registered new OAuth client');
-      res.status(201).json(response);
-    } catch (error) {
-      logger.error({ error }, 'Client registration error');
-      res.status(400).json({
-        error: 'invalid_client_metadata',
-        error_description: 'Failed to register client'
-      });
-    }
-  }
-
   private async handleAuthorization(req: Request, res: Response) {
     const {
       response_type,
-      client_id,
       redirect_uri,
       scope,
       state,
@@ -126,42 +49,16 @@ export class OAuthProxyRouter {
       code_challenge_method
     } = req.query;
 
-    // Validate client_id
     logger.info({
-      client_id,
-      registered_clients: Array.from(this.registeredClients.keys()),
-      total_clients: this.registeredClients.size
-    }, 'Authorization request');
-    
-    let client = this.registeredClients.get(client_id as string);
-    if (!client) {
-      // Auto-register Claude clients
-      if ((client_id as string).startsWith('mcp_') && redirect_uri) {
-        logger.info({ client_id }, 'Auto-registering Claude client');
-        client = {
-          client_id: client_id as string,
-          client_secret: 'auto-generated', // Not used for PKCE flow
-          redirect_uris: [redirect_uri as string],
-          client_name: 'Claude MCP Client',
-          grant_types: ['authorization_code'],
-          response_types: ['code'],
-          scope: scope as string
-        };
-        this.registeredClients.set(client_id as string, client);
-      } else {
-        logger.error({ client_id }, 'Client not found');
-        return res.status(400).json({
-          error: 'invalid_client',
-          error_description: 'Client not found'
-        });
-      }
-    }
+      redirect_uri,
+      has_pkce: !!code_challenge
+    }, 'Authorization request (no client validation - DCR removed)');
 
-    // Validate redirect_uri
-    if (!client.redirect_uris.includes(redirect_uri as string)) {
+    // Validate required parameters
+    if (!redirect_uri) {
       return res.status(400).json({
         error: 'invalid_request',
-        error_description: 'Invalid redirect_uri'
+        error_description: 'redirect_uri is required'
       });
     }
 
@@ -172,14 +69,12 @@ export class OAuthProxyRouter {
     this.pendingAuthorizations.set(authCode, {
       code_challenge: code_challenge as string,
       code_challenge_method: code_challenge_method as string || 'plain',
-      client_id: client_id as string,
       redirect_uri: redirect_uri as string,
       state: state as string
     });
     
     logger.info({
       authCode,
-      client_id,
       has_pkce: !!code_challenge
     }, 'Stored pending authorization');
 
@@ -187,7 +82,6 @@ export class OAuthProxyRouter {
     const stateData = {
       original_redirect_uri: redirect_uri,
       original_state: state,
-      client_id: client_id,
       auth_code: authCode
     };
     const encodedState = Buffer.from(JSON.stringify(stateData)).toString('base64');
@@ -210,29 +104,9 @@ export class OAuthProxyRouter {
       grant_type,
       code,
       redirect_uri,
-      client_id,
-      client_secret,
       refresh_token,
       code_verifier
     } = req.body;
-
-    // Validate client
-    const client = this.registeredClients.get(client_id);
-    if (!client) {
-      return res.status(401).json({
-        error: 'invalid_client',
-        error_description: 'Client not found'
-      });
-    }
-    
-    // For PKCE flow, client_secret might not be required
-    const isPKCE = code_verifier !== undefined;
-    if (!isPKCE && client.client_secret !== client_secret) {
-      return res.status(401).json({
-        error: 'invalid_client',
-        error_description: 'Invalid client credentials'
-      });
-    }
 
     try {
       let tokens;
@@ -244,6 +118,14 @@ export class OAuthProxyRouter {
           return res.status(400).json({
             error: 'invalid_grant',
             error_description: 'Invalid authorization code'
+          });
+        }
+
+        // Verify redirect_uri matches
+        if (redirect_uri && redirect_uri !== pendingAuth.redirect_uri) {
+          return res.status(400).json({
+            error: 'invalid_grant',
+            error_description: 'redirect_uri mismatch'
           });
         }
 
@@ -297,6 +179,14 @@ export class OAuthProxyRouter {
           error_description: 'Only authorization_code and refresh_token grant types are supported'
         });
       }
+
+      // Log token info for debugging
+      logger.info({
+        has_access_token: !!tokens.access_token,
+        has_refresh_token: !!tokens.refresh_token,
+        expires_in: tokens.expiry_date ? Math.floor((tokens.expiry_date - Date.now()) / 1000) : 3600,
+        grant_type
+      }, 'Returning tokens to client');
 
       // Return Google tokens directly (spec compliant)
       res.json({

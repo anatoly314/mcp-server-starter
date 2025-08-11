@@ -33,6 +33,14 @@ export class GoogleOAuthProvider implements OAuthProvider {
     try {
       const { tokens } = await this.oauth2Client.getToken(code);
       this.oauth2Client.setCredentials(tokens);
+      
+      // Log whether refresh token was received
+      logger.info({
+        has_refresh_token: !!tokens.refresh_token,
+        has_access_token: !!tokens.access_token,
+        expiry_date: tokens.expiry_date
+      }, 'Received tokens from Google');
+      
       return tokens as OAuthTokens;
     } catch (error) {
       throw new Error(`Failed to exchange code for tokens: ${error}`);
@@ -69,10 +77,19 @@ export class GoogleOAuthProvider implements OAuthProvider {
 
   async refreshAccessToken(refreshToken: string): Promise<OAuthTokens> {
     try {
+      logger.info('Attempting to refresh access token');
       this.oauth2Client.setCredentials({ refresh_token: refreshToken });
       const { credentials } = await this.oauth2Client.refreshAccessToken();
+      
+      logger.info({
+        has_new_access_token: !!credentials.access_token,
+        has_refresh_token: !!credentials.refresh_token,
+        expiry_date: credentials.expiry_date
+      }, 'Successfully refreshed access token');
+      
       return credentials as OAuthTokens;
     } catch (error) {
+      logger.error({ error }, 'Failed to refresh access token');
       throw new Error(`Failed to refresh access token: ${error}`);
     }
   }

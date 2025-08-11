@@ -32,21 +32,22 @@ export function dynamicOAuthMetadataMiddleware(req: Request, res: Response, next
 
   if (req.path === '/.well-known/oauth-protected-resource') {
     res.json({
-      resource: `${baseUrl}/mcp`,
+      // resource: `${baseUrl}/mcp`,
+      resource: `${baseUrl}`,
       authorization_servers: [baseUrl],
       scopes_supported: envProvider.oauthScopes.split(' '),
       resource_name: envProvider.mcpServerName
     });
   } else if (req.path === '/.well-known/oauth-authorization-server') {
+    // DCR removed - no registration_endpoint
     res.json({
       issuer: baseUrl,
       authorization_endpoint: `${baseUrl}/oauth/authorize`,
       token_endpoint: `${baseUrl}/oauth/token`,
-      registration_endpoint: `${baseUrl}/oauth/register`,
       response_types_supported: ['code'],
       scopes_supported: envProvider.oauthScopes.split(' '),
       grant_types_supported: ['authorization_code', 'refresh_token'],
-      token_endpoint_auth_methods_supported: ['client_secret_post', 'client_secret_basic'],
+      token_endpoint_auth_methods_supported: ['none'],  // No client auth needed
       code_challenge_methods_supported: ['S256', 'plain']
     });
   } else {

@@ -2,7 +2,7 @@
   "mcpServers": {
     "http-server": {
       "type": "streamable-http",
-      "url": "http://localhost:3000/mcp",
+      "url": "http://localhost:3000",
       "note": "For Streamable HTTP connections, add this URL directly in your MCP Client"
     },
     "stdio-server": {
