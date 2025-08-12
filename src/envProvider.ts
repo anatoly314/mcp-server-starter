@@ -80,10 +80,6 @@ class EnvProvider {
 
   private validateConfig(): void {
     if (this.config.AUTH_ENABLED || this.config.OAUTH_PROXY_ENABLED) {
-      if (!this.config.OAUTH_CLIENT_ID || !this.config.OAUTH_CLIENT_SECRET) {
-        throw new Error('Missing required OAuth environment variables: OAUTH_CLIENT_ID and OAUTH_CLIENT_SECRET');
-      }
-      
       // All providers must specify their OAuth URLs
       const required = ['OAUTH_AUTHORIZATION_URL', 'OAUTH_TOKEN_URL', 'OAUTH_USERINFO_URL'];
       const missing = required.filter(key => !this.config[key as keyof EnvironmentConfig]);

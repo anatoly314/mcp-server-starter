@@ -29,11 +29,13 @@ export class HTTPServer {
     this.app.use(ipFilterMiddleware);
     
     // Trust proxy headers (needed for reverse proxies like Cloudflare, nginx)
-    this.app.set('trust proxy', true);
+    // Set to specific number or list to satisfy express-rate-limit
+    this.app.set('trust proxy', 1); // Trust first proxy (Cloudflare)
     
     // Enable CORS for all origins (needed for MCP Inspector)
     this.app.use(cors());
     this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true })); // For OAuth token requests
     
     // Add logging middleware
     if (process.env.REQUEST_LOGGING !== 'false') {

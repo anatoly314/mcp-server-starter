@@ -9,8 +9,13 @@ const tokenCache = new Map<string, { userInfo: any; timestamp: number }>();
 const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 export async function authMiddleware(req: Request, res: Response, next: NextFunction) {
-  // Skip auth for OAuth proxy endpoints
-  if (req.path.startsWith('/oauth/') || req.path.includes('/.well-known/')) {
+  // Skip auth for OAuth proxy endpoints and DCR
+  if (req.path.startsWith('/oauth/') || 
+      req.path.includes('/.well-known/') || 
+      req.path === '/register' ||
+      req.path === '/authorize' ||
+      req.path === '/token' ||
+      req.path === '/revoke') {
     return next();
   }
 

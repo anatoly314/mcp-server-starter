@@ -14,7 +14,12 @@
     "allowJs": true,
     "declaration": true,
     "declarationMap": true,
-    "sourceMap": true
+    "sourceMap": true,
+
+    // Add these for better debugging:
+    "inlineSources": true,        // Embeds TypeScript source in the source maps
+    "inlineSourceMap": false,      // Keep as false - external maps work better with WebStorm
+    "sourceRoot": "/"              // Helps with source map path resolution
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
