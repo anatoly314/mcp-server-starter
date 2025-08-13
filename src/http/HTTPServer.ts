@@ -38,7 +38,7 @@ export class HTTPServer {
     this.app.use(express.urlencoded({ extended: true })); // For OAuth token requests
     
     // Add logging middleware
-    if (process.env.REQUEST_LOGGING !== 'false') {
+    if (envProvider.requestLogging) {
       this.app.use(loggingMiddleware);
     }
     

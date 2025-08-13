@@ -16,6 +16,9 @@ interface EnvironmentConfig {
   // Security Configuration
   FILTER_BY_IP?: string;
   ALLOWED_EMAILS?: string;
+  
+  // Logging Configuration
+  REQUEST_LOGGING: boolean;
 }
 
 class EnvProvider {
@@ -46,7 +49,10 @@ class EnvProvider {
       
       // Security Configuration
       FILTER_BY_IP: process.env.FILTER_BY_IP,
-      ALLOWED_EMAILS: process.env.ALLOWED_EMAILS
+      ALLOWED_EMAILS: process.env.ALLOWED_EMAILS,
+      
+      // Logging Configuration
+      REQUEST_LOGGING: process.env.REQUEST_LOGGING !== 'false'
     };
   }
 
@@ -105,6 +111,10 @@ class EnvProvider {
 
   get allowedEmails(): string | undefined {
     return this.config.ALLOWED_EMAILS;
+  }
+  
+  get requestLogging(): boolean {
+    return this.config.REQUEST_LOGGING;
   }
 }
 

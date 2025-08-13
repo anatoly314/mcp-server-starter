@@ -28,7 +28,7 @@ export class ServerConfigResource extends BaseResource {
         oauthIssuer: envProvider.oauthIssuerUrl,
       },
       features: {
-        requestLogging: process.env.REQUEST_LOGGING !== 'false',
+        requestLogging: envProvider.requestLogging,
       }
     };
     
