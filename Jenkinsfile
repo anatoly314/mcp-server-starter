@@ -27,8 +27,7 @@ pipeline {
                                     --context . \
                                     --dockerfile ./Dockerfile \
                                     --destination ${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${IMAGE_NAME}:latest \
-                                    --destination ${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${IMAGE_NAME}:${BRANCH_NAME_CLEAN} \
-                                    --destination ${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${IMAGE_NAME}:${GIT_COMMIT_SHORT}
+                                    --destination ${HARBOR_REGISTRY}/${HARBOR_PROJECT}/${IMAGE_NAME}:${BRANCH_NAME_CLEAN}-${GIT_COMMIT_SHORT}
                             '''
                         }
                     }
