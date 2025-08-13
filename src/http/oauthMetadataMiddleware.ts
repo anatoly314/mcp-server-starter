@@ -40,7 +40,7 @@ export function createOAuthMetadataRouter(): Router {
     oauthMetadata,
     resourceServerUrl,
     resourceName: envProvider.mcpServerName,
-    serviceDocumentationUrl: envProvider.serviceDocumentationUrl,
+    serviceDocumentationUrl: envProvider.serviceDocumentationUrl ? new URL(envProvider.serviceDocumentationUrl) : undefined,
     scopesSupported: ['openid', 'profile', 'email'] // Use Clerk's supported scopes
   });
   
