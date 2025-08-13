@@ -1,7 +1,6 @@
 import { MCPServer } from './mcp/MCPServer';
 import { HTTPServer } from './http/HTTPServer';
 import { StdioServer } from './stdio/StdioServer';
-import { OAuthProxyServer } from './oauth/OAuthProxyServer';
 import { envProvider } from './envProvider';
 import { createLogger } from './logger';
 
@@ -18,12 +17,6 @@ async function main() {
       await stdioServer.connectMCPServer(mcpServer.getServer());
     } else {
       const httpServer = new HTTPServer();
-      
-      // Setup OAuth proxy if enabled
-      if (envProvider.oauthProxyEnabled) {
-        const oauthProxy = new OAuthProxyServer(httpServer.getApp());
-        oauthProxy.setup();
-      }
       
       // Setup MCP endpoints
       httpServer.setupMCPEndpoints();
