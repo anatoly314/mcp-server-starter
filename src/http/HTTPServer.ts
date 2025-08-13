@@ -9,7 +9,6 @@ import { loggingMiddleware } from './loggingMiddleware';
 import { ipFilterMiddleware } from './ipFilterMiddleware';
 import { emailFilterMiddleware } from './emailFilterMiddleware';
 import { createLogger } from '../logger';
-import {captureResponseBody, pinoHttpMiddleware} from "./pinoHttpMiddleware";
 
 const logger = createLogger('http');
 
@@ -29,8 +28,6 @@ export class HTTPServer {
   private setupMiddleware() {
     // IP filter must be first - it's our first line of defense
     this.app.use(ipFilterMiddleware);
-    this.app.use(captureResponseBody);
-    this.app.use(pinoHttpMiddleware);
     // Trust proxy headers (needed for reverse proxies like Cloudflare, nginx)
     // Set to specific number or list to satisfy express-rate-limit
     this.app.set('trust proxy', 1); // Trust first proxy (Cloudflare)
@@ -59,25 +56,7 @@ export class HTTPServer {
     this.app.use(emailFilterMiddleware);
   }
 
-  getApp(): Express {
-    return this.app;
-  }
-
   setupMCPEndpoints() {
-    // Handle MCP requests at /mcp
-    this.app.post('/mcp', async (req, res) => {
-      await this.transport.handleRequest(req, res, req.body);
-    });
-
-    this.app.get('/mcp', async (req, res) => {
-      await this.transport.handleRequest(req, res);
-    });
-
-    this.app.delete('/mcp', async (req, res) => {
-      await this.transport.handleRequest(req, res);
-    });
-    
-    // Also handle MCP requests at root (for Claude compatibility)
     this.app.post('/', async (req, res) => {
       await this.transport.handleRequest(req, res, req.body);
     });
@@ -97,11 +76,8 @@ export class HTTPServer {
 
   start() {
     this.app.listen(envProvider.httpPort, envProvider.httpHost, () => {
-      const baseUrl = envProvider.publicUrl || `http://${envProvider.httpHost}:${envProvider.httpPort}`;
       logger.info(`${envProvider.mcpServerName} v${envProvider.mcpServerVersion} started`);
-      logger.info('MCP endpoints available at:');
-      logger.info(`  - ${baseUrl}/mcp (recommended)`);
-      logger.info(`  - ${baseUrl}/ (Claude compatibility)`);
+
       if (envProvider.authEnabled) {
         logger.info('Authentication is ENABLED - Bearer token required for MCP endpoints');
       }

@@ -22,16 +22,6 @@ export function emailFilterMiddleware(req: Request, res: Response, next: NextFun
     return next();
   }
 
-  // Skip for OAuth proxy endpoints and DCR (same as authMiddleware)
-  if (req.path.startsWith('/oauth/') || 
-      req.path.includes('/.well-known/') || 
-      req.path === '/register' ||
-      req.path === '/authorize' ||
-      req.path === '/token' ||
-      req.path === '/revoke') {
-    return next();
-  }
-
   const allowedEmails = envProvider.allowedEmails;
   
   // If no email filter configured, allow all authenticated users

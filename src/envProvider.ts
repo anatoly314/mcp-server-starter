@@ -1,14 +1,14 @@
 interface EnvironmentConfig {
   // OAuth Configuration
   AUTH_ENABLED: boolean;
-  OAUTH_AUTHORIZATION_SERVER_URL?: string;
-  PUBLIC_URL?: string;
+  OAUTH_ISSUER_URL?: string;
+  PUBLIC_URL: string; // Required
+  SERVICE_DOCUMENTATION_URL?: string;
   
   
   // MCP Server Configuration
   MCP_SERVER_NAME: string;
   MCP_SERVER_VERSION: string;
-  PORT?: string;
   TRANSPORT_TYPE: 'stdio' | 'http';
   HTTP_HOST?: string;
   HTTP_PORT?: string;
@@ -29,18 +29,17 @@ class EnvProvider {
   private parseEnvironment(): EnvironmentConfig {
     const transportType = (process.env.TRANSPORT_TYPE || 'http').toLowerCase();
     const authEnabled = process.env.AUTH_ENABLED === 'true';
-    const publicUrl = process.env.PUBLIC_URL;
     
     return {
       // OAuth Configuration
       AUTH_ENABLED: authEnabled,
-      OAUTH_AUTHORIZATION_SERVER_URL: process.env.OAUTH_AUTHORIZATION_SERVER_URL,
-      PUBLIC_URL: publicUrl,
+      OAUTH_ISSUER_URL: process.env.OAUTH_ISSUER_URL,
+      PUBLIC_URL: process.env.PUBLIC_URL || '', // Will be validated
+      SERVICE_DOCUMENTATION_URL: process.env.SERVICE_DOCUMENTATION_URL,
       
       // MCP Configuration
       MCP_SERVER_NAME: process.env.MCP_SERVER_NAME || 'mcp-server-starter',
       MCP_SERVER_VERSION: process.env.MCP_SERVER_VERSION || '1.0.0',
-      PORT: process.env.PORT || '3000',
       TRANSPORT_TYPE: (transportType === 'stdio' ? 'stdio' : 'http') as 'stdio' | 'http',
       HTTP_HOST: process.env.HTTP_HOST || 'localhost',
       HTTP_PORT: process.env.HTTP_PORT || '3000',
@@ -52,9 +51,13 @@ class EnvProvider {
   }
 
   private validateConfig(): void {
+    if (!this.config.PUBLIC_URL) {
+      throw new Error('Missing required environment variable: PUBLIC_URL');
+    }
+    
     if (this.config.AUTH_ENABLED) {
-      if (!this.config.OAUTH_AUTHORIZATION_SERVER_URL) {
-        throw new Error('Missing required environment variable: OAUTH_AUTHORIZATION_SERVER_URL');
+      if (!this.config.OAUTH_ISSUER_URL) {
+        throw new Error('Missing required environment variable: OAUTH_ISSUER_URL when AUTH_ENABLED=true');
       }
     }
   }
@@ -66,10 +69,6 @@ class EnvProvider {
 
   get mcpServerVersion(): string {
     return this.config.MCP_SERVER_VERSION;
-  }
-
-  get port(): number {
-    return parseInt(this.config.PORT || '3000', 10);
   }
 
   get authEnabled(): boolean {
@@ -88,12 +87,16 @@ class EnvProvider {
     return parseInt(this.config.HTTP_PORT || '3000', 10);
   }
 
-  get oauthAuthorizationServerUrl(): string | undefined {
-    return this.config.OAUTH_AUTHORIZATION_SERVER_URL;
+  get oauthIssuerUrl(): string | undefined {
+    return this.config.OAUTH_ISSUER_URL;
   }
 
-  get publicUrl(): string | undefined {
-    return this.config.PUBLIC_URL;
+  get publicUrl(): string {
+    return this.config.PUBLIC_URL!; // Guaranteed to exist by validateConfig
+  }
+  
+  get serviceDocumentationUrl(): string | undefined {
+    return this.config.SERVICE_DOCUMENTATION_URL;
   }
 
   get filterByIp(): string | undefined {
@@ -102,10 +105,6 @@ class EnvProvider {
 
   get allowedEmails(): string | undefined {
     return this.config.ALLOWED_EMAILS;
-  }
-
-  getAll(): EnvironmentConfig {
-    return { ...this.config };
   }
 }
 

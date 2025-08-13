@@ -13,7 +13,7 @@ export class AuthStatusResource extends BaseResource {
   async read(uri: string): Promise<ReadResourceResult> {
     const status = {
       enabled: envProvider.authEnabled,
-      authorizationServerUrl: envProvider.oauthAuthorizationServerUrl || 'not configured',
+      oauthIssuer: envProvider.oauthIssuerUrl || 'not configured',
       publicUrl: envProvider.publicUrl || 'not configured',
       mode: 'Dynamic Client Registration (DCR)'
     };

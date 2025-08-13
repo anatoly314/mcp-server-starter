@@ -26,30 +26,18 @@ export async function dcrAuthMiddleware(req: Request, res: Response, next: NextF
     return next();
   }
 
-  // Extract the issuer URL from the OAuth authorization server URL
-  // Format: https://domain/.well-known/oauth-authorization-server -> https://domain
-  const authServerUrl = envProvider.oauthAuthorizationServerUrl;
-  if (!authServerUrl) {
-    logger.error('OAUTH_AUTHORIZATION_SERVER_URL not configured');
-    return res.status(500).json({
-      error: 'server_error',
-      error_description: 'OAuth authorization server not configured'
-    });
-  }
-
-  // Parse the issuer URL (remove .well-known path)
-  const issuerUrl = authServerUrl.replace('/.well-known/oauth-authorization-server', '');
+  // issuerUrl is guaranteed to exist when authEnabled is true (validated at startup)
+  const issuerUrl = envProvider.oauthIssuerUrl!;
 
   // Check for authorization header
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     // Return 401 with WWW-Authenticate header per MCP spec
     // The header must indicate the resource server metadata URL
-    const resourceUrl = envProvider.publicUrl || `http://${envProvider.httpHost}:${envProvider.httpPort}`;
-    const resourceMetadataUrl = `${resourceUrl}/.well-known/oauth-protected-resource`;
+    const resourceMetadataUrl = `${envProvider.publicUrl}/.well-known/oauth-protected-resource`;
     
     res.setHeader('WWW-Authenticate', 
-      `Bearer realm="${envProvider.publicUrl || 'MCP Server'}", ` +
+      `Bearer realm="${envProvider.publicUrl}", ` +
       `resource_metadata="${resourceMetadataUrl}"`
     );
     
@@ -115,11 +103,10 @@ export async function dcrAuthMiddleware(req: Request, res: Response, next: NextF
     logger.error({ error: error.message }, 'Token validation error');
     
     // Return proper OAuth error response with WWW-Authenticate header
-    const resourceUrl = envProvider.publicUrl || `http://${envProvider.httpHost}:${envProvider.httpPort}`;
-    const resourceMetadataUrl = `${resourceUrl}/.well-known/oauth-protected-resource`;
+    const resourceMetadataUrl = `${envProvider.publicUrl}/.well-known/oauth-protected-resource`;
     
     res.setHeader('WWW-Authenticate', 
-      `Bearer realm="${envProvider.publicUrl || 'MCP Server'}", ` +
+      `Bearer realm="${envProvider.publicUrl}", ` +
       `resource_metadata="${resourceMetadataUrl}", ` +
       `error="invalid_token", ` +
       `error_description="The access token provided is expired, revoked, malformed, or invalid"`

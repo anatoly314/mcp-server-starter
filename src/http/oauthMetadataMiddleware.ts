@@ -11,16 +11,8 @@ const logger = createLogger('oauth-metadata');
  * This implements the complete OAuth discovery flow for MCP servers
  */
 export function createOAuthMetadataRouter(): Router {
-  // Parse the issuer URL from the authorization server URL
-  const authServerUrl = envProvider.oauthAuthorizationServerUrl;
-
-  if (!authServerUrl) {
-    throw new Error('OAUTH_AUTHORIZATION_SERVER_URL not configured');
-  }
-  
-  // Extract issuer from the .well-known URL
-  // Format: https://domain/.well-known/oauth-authorization-server -> https://domain
-  const issuer = authServerUrl.replace('/.well-known/oauth-authorization-server', '');
+  // issuerUrl is guaranteed to exist when this function is called (validated at startup)
+  const issuer = envProvider.oauthIssuerUrl!;
   
   // Construct the OAuth metadata based on Clerk's standard structure
   // We know Clerk's endpoints follow this pattern
@@ -41,16 +33,14 @@ export function createOAuthMetadataRouter(): Router {
   };
   
   // Determine the resource server URL
-  const resourceServerUrl = new URL(
-    envProvider.publicUrl || `http://${envProvider.httpHost}:${envProvider.httpPort}`
-  );
+  const resourceServerUrl = new URL(envProvider.publicUrl);
 
   // Create the metadata router using MCP SDK
   const router = mcpAuthMetadataRouter({
     oauthMetadata,
     resourceServerUrl,
     resourceName: envProvider.mcpServerName,
-    serviceDocumentationUrl: undefined, // Optional: add if you have docs
+    serviceDocumentationUrl: envProvider.serviceDocumentationUrl,
     scopesSupported: ['openid', 'profile', 'email'] // Use Clerk's supported scopes
   });
   
