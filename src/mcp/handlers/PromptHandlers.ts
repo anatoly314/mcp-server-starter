@@ -6,7 +6,7 @@ import {
   ErrorCode,
   McpError 
 } from '@modelcontextprotocol/sdk/types.js';
-import { PromptRegistry } from '../primitives/prompts/PromptRegistry.js';
+import { PromptRegistry } from '../primitives/prompts';
 
 export class PromptHandlers {
   constructor(private readonly promptRegistry: PromptRegistry) {}

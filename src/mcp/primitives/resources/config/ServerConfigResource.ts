@@ -24,8 +24,8 @@ export class ServerConfigResource extends BaseResource {
       },
       auth: {
         enabled: envProvider.authEnabled,
-        provider: envProvider.oauthProvider,
-        proxyEnabled: envProvider.oauthProxyEnabled,
+        mode: 'DCR (Dynamic Client Registration)',
+        authorizationServerUrl: envProvider.oauthAuthorizationServerUrl,
       },
       features: {
         requestLogging: process.env.REQUEST_LOGGING !== 'false',

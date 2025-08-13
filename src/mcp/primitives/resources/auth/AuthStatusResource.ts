@@ -13,11 +13,9 @@ export class AuthStatusResource extends BaseResource {
   async read(uri: string): Promise<ReadResourceResult> {
     const status = {
       enabled: envProvider.authEnabled,
-      configured: envProvider.authEnabled && !!envProvider.oauthClientId,
-      provider: envProvider.authEnabled ? envProvider.oauthProvider : 'none',
-      clientId: envProvider.authEnabled ? (envProvider.oauthClientId ? 'configured' : 'missing') : 'disabled',
-      redirectUri: envProvider.authEnabled ? envProvider.oauthRedirectUri : 'disabled',
-      scopes: envProvider.authEnabled ? envProvider.oauthScopes : 'disabled'
+      authorizationServerUrl: envProvider.oauthAuthorizationServerUrl || 'not configured',
+      publicUrl: envProvider.publicUrl || 'not configured',
+      mode: 'Dynamic Client Registration (DCR)'
     };
     
     return this.createTextContent(uri, JSON.stringify(status, null, 2));

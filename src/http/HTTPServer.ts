@@ -3,11 +3,13 @@ import cors from 'cors';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp.js';
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { envProvider } from '../envProvider';
-import { authMiddleware } from './authMiddleware';
+import { dcrAuthMiddleware } from './dcrAuthMiddleware';
+import { createOAuthMetadataRouter } from './oauthMetadataMiddleware';
 import { loggingMiddleware } from './loggingMiddleware';
 import { ipFilterMiddleware } from './ipFilterMiddleware';
 import { emailFilterMiddleware } from './emailFilterMiddleware';
 import { createLogger } from '../logger';
+import {captureResponseBody, pinoHttpMiddleware} from "./pinoHttpMiddleware";
 
 const logger = createLogger('http');
 
@@ -27,7 +29,8 @@ export class HTTPServer {
   private setupMiddleware() {
     // IP filter must be first - it's our first line of defense
     this.app.use(ipFilterMiddleware);
-    
+    this.app.use(captureResponseBody);
+    this.app.use(pinoHttpMiddleware);
     // Trust proxy headers (needed for reverse proxies like Cloudflare, nginx)
     // Set to specific number or list to satisfy express-rate-limit
     this.app.set('trust proxy', 1); // Trust first proxy (Cloudflare)
@@ -42,8 +45,15 @@ export class HTTPServer {
       this.app.use(loggingMiddleware);
     }
     
-    // Apply auth middleware globally if AUTH_ENABLED=true
-    this.app.use(authMiddleware);
+    // Setup OAuth metadata endpoints if auth is enabled
+    // This must come BEFORE the auth middleware so the metadata endpoints are public
+    if (envProvider.authEnabled) {
+      const metadataRouter = createOAuthMetadataRouter();
+      this.app.use(metadataRouter);
+    }
+    
+    // Apply DCR-compliant auth middleware globally if AUTH_ENABLED=true
+    this.app.use(dcrAuthMiddleware);
     
     // Apply email filter AFTER auth (needs user info from auth)
     this.app.use(emailFilterMiddleware);
