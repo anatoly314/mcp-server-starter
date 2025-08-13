@@ -1,296 +1,68 @@
-# MCP Server Starter Kit
+# MCP Server Starter
 
-Production-ready Model Context Protocol server with batteries included.  
-Fork, extend, deploy. No bullshit.
+Production-ready Model Context Protocol server with OAuth, logging, and security.
 
-## What This Is
+## Features
 
-- ✅ **Working MCP server** with auth, logging, and security out of the box
-- ✅ **Extensible registry pattern** for tools, resources, and prompts  
-- ✅ **Multiple transports** configured (HTTP with SSE, stdio for Claude Desktop)
-- ✅ **Production middleware** - OAuth 2.0, IP filtering, email filtering, structured logging
-- ✅ **TypeScript** with proper error handling and modular architecture
-- ✅ **Pino logging** - structured JSON logs that don't interfere with stdio
+- ✅ MCP server with HTTP/SSE and stdio transports
+- ✅ OAuth 2.0 with Dynamic Client Registration (Clerk)
+- ✅ IP filtering, email filtering, structured logging
+- ✅ TypeScript, modular architecture
+- ✅ Docker support
 
-## What This Isn't
-
-- ❌ **Not a framework** - no coding conventions forced on you
-- ❌ **Not bare boilerplate** - actually works out of the box  
-- ❌ **Not a library** - you fork and own your copy
-
-## Get Started in 2 Minutes
-
-### Prerequisites
+## Quick Start
 
 ```bash
-# Install pnpm if you haven't already
-npm install -g pnpm
-
-# For Claude Desktop support
-npm install -g tsx
-```
-
-### Quick Start
-
-```bash
-# Clone and install
+# Install
 git clone https://github.com/anatoly314/mcp-server-starter.git
 cd mcp-server-starter
 pnpm install
 
-# Copy environment config
+# Configure
 cp .env.http.example .env.http
+# Edit .env.http with your settings
 
-# Start the server
+# Run
 pnpm run dev:http
 ```
 
-Server runs at `http://localhost:3000/mcp` with:
-- Echo tool (for testing)
-- Timestamp tool
-- System info resource
-- Auth status resource
-- Three code-related prompts
+Server runs at `http://localhost:3000`
 
-## Production Features Built-In
+## Environment Variables
 
-### 🔐 Security
-- **Google OAuth 2.0** - Full OAuth flow with token validation and caching
-- **IP Filtering** - Restrict access by IP ranges (supports Cloudflare headers)
-- **Email Filtering** - Whitelist specific emails for access control
-- **Bearer Token Auth** - Standard HTTP Authorization header support
+### Required
+- `PUBLIC_URL` - Where your server is accessible (e.g., `http://localhost:3000`)
 
-### 📊 Observability
-- **Structured Logging** - Pino with JSON output to stderr
-- **Request Logging** - HTTP middleware with request/response details
-- **Error Tracking** - Proper error boundaries and logging
+### OAuth (optional)
+- `AUTH_ENABLED=true` - Enable OAuth
+- `OAUTH_ISSUER_URL` - OAuth provider URL (e.g., Clerk domain)
+- `SERVICE_DOCUMENTATION_URL` - Link to your docs
 
-### 🏗️ Architecture
-- **Registry Pattern** - Easy to add new tools/resources/prompts
-- **Dependency Injection Ready** - Clean constructor patterns (no DI framework bloat)
-- **Transport Agnostic** - Same MCP server works with HTTP and stdio
-- **Environment-based Config** - All configuration via env vars
+### Security (optional)
+- `FILTER_BY_IP` - Comma-separated IPs/CIDR ranges
+- `ALLOWED_EMAILS` - Comma-separated email whitelist
 
-## Adding Your Own Features
+## Extending
 
-### Add a New Tool
-
-Create a new tool in `src/mcp/capabilities/tools/`:
-
-```typescript
-// src/mcp/capabilities/tools/my-tool/MyTool.ts
-import { BaseTool, ToolDefinition } from '../types';
-
-export class MyTool extends BaseTool {
-  definition: ToolDefinition = {
-    name: 'my_tool',
-    description: 'Does something useful',
-    inputSchema: {
-      type: 'object',
-      properties: {
-        input: { type: 'string' }
-      },
-      required: ['input']
-    }
-  };
-
-  async execute(args: any): Promise<CallToolResult> {
-    // Your implementation here
-    return {
-      content: [{
-        type: 'text',
-        text: `Result: ${args.input}`
-      }]
-    };
-  }
-}
-```
-
-Register it in `src/mcp/capabilities/tools/index.ts`:
-
-```typescript
-import { MyTool } from './my-tool/MyTool';
-
-export function createToolRegistry(): ToolRegistry {
-  const registry = new ToolRegistry();
-  
-  // Existing tools
-  registry.register(new EchoTool());
-  registry.register(new TimestampTool());
-  
-  // Your new tool
-  registry.register(new MyTool());
-  
-  return registry;
-}
-```
-
-### Add a New Resource
-
-Similar pattern for resources in `src/mcp/capabilities/resources/`.
-
-### Add a New Prompt
-
-Similar pattern for prompts in `src/mcp/capabilities/prompts/`.
-
-## Configuration
-
-### Environment Variables
-
-```bash
-# Server Configuration
-MCP_SERVER_NAME=my-mcp-server
-MCP_SERVER_VERSION=1.0.0
-TRANSPORT_TYPE=http          # or stdio
-HTTP_HOST=0.0.0.0
-HTTP_PORT=3000
-
-# OAuth Configuration (optional)
-AUTH_ENABLED=true
-OAUTH_CLIENT_ID=your-google-client-id
-OAUTH_CLIENT_SECRET=your-google-client-secret
-PUBLIC_URL=https://your-domain.com
-
-# Security (optional)
-FILTER_BY_IP=192.168.1.0/24,10.0.0.1
-ALLOWED_EMAILS=user@example.com,admin@company.org
-
-# Logging
-LOG_LEVEL=info               # debug, info, warn, error
-REQUEST_LOGGING=true
-```
+Add your functionality in `/src/mcp/primitives/`:
+- `tools/` - MCP tools
+- `resources/` - MCP resources  
+- `prompts/` - MCP prompts
 
 ## Deployment
 
-### Local Development
-```bash
-pnpm run dev:http    # HTTP transport with hot reload
-pnpm run dev:stdio   # Stdio transport for Claude Desktop
-```
-
-### Production Build
-```bash
-pnpm run build       # Compile TypeScript
-node dist/server.js  # Run compiled server
-```
-
 ### Docker
-
-Production-ready Docker image with multi-stage build:
-
 ```bash
-# Build
-docker build -t mcp-server-starter .
-
-# Run
-docker run -p 3000:3000 --env-file .env.http mcp-server-starter
+docker build -t mcp-server .
+docker run -p 3000:3000 --env-file .env.http mcp-server
 ```
 
-See [DOCKER.md](./DOCKER.md) for detailed Docker deployment guide.
+### Claude Desktop
+See [CLAUDE_DESKTOP_SETUP.md](CLAUDE_DESKTOP_SETUP.md)
 
-### Cloud Deployment
-
-Works with any Node.js hosting:
-- **Railway** - One-click deploy
-- **Render** - Automatic SSL
-- **Fly.io** - Global distribution
-- **AWS/GCP/Azure** - Enterprise scale
-
-## Testing
-
-### MCP Inspector
-```bash
-# Start server for Inspector
-pnpm run inspector:stdio
-
-# Or test HTTP endpoint manually
-pnpm run dev:http
-```
-
-### Manual Testing
-```bash
-# Test with curl
-curl -X POST http://localhost:3000/mcp \
-  -H "Content-Type: application/json" \
-  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
-```
-
-## Architecture Overview
-
-```
-src/
-├── server.ts                 # Entry point
-├── envProvider.ts           # Environment configuration
-├── logger.ts                # Pino logger setup
-├── mcp/                     # MCP implementation
-│   ├── MCPServer.ts         # Core MCP server
-│   ├── handlers/            # Request handlers (orchestration)
-│   └── capabilities/        # MCP capabilities
-│       ├── tools/           # Tool implementations
-│       │   ├── ToolRegistry.ts
-│       │   └── echo/        # Example tool
-│       ├── resources/       # Resource implementations
-│       │   ├── ResourceRegistry.ts
-│       │   └── auth/        # Auth status resource
-│       └── prompts/         # Prompt implementations
-│           ├── PromptRegistry.ts
-│           └── code-review/ # Example prompt
-├── http/                    # HTTP transport
-│   ├── HTTPServer.ts        # Express server
-│   ├── authMiddleware.ts    # OAuth validation
-│   ├── emailFilterMiddleware.ts
-│   └── ipFilterMiddleware.ts
-├── stdio/                   # Stdio transport
-│   └── StdioServer.ts
-├── oauth/                   # OAuth proxy
-│   └── OAuthProxyServer.ts
-└── auth/                    # Auth providers
-    └── providers/
-        └── google/
-```
-
-## Why Use This?
-
-### vs. Building from Scratch
-- **Save 2-3 weeks** of setup and boilerplate
-- **Production patterns** already implemented
-- **Security** handled correctly from day one
-
-### vs. Other MCP Starters
-- **Actually production-ready** - not a toy example
-- **Batteries included** - auth, logging, security work out of the box
-- **No framework lock-in** - just clean TypeScript you can modify
-
-### vs. MCP Libraries
-- **You own the code** - no black box dependencies
-- **Customizable** - change anything you need
-- **Learnable** - see how everything works
-
-## Common Use Cases
-
-This starter kit is perfect for:
-
-- **AI Tool Integration** - Add your company's internal tools to Claude
-- **API Gateways** - Expose existing APIs through MCP
-- **Data Access Layers** - Provide LLMs access to your databases
-- **Workflow Automation** - Build conversational interfaces to complex systems
-- **Custom Assistants** - Create specialized AI agents with specific capabilities
-
-## Documentation
-
-- [Claude Desktop Setup](./CLAUDE_DESKTOP_SETUP.md) - Use with Claude Desktop app
-- [Google OAuth Setup](./GOOGLE_OAUTH_SETUP.md) - Configure authentication
-- [Environment Setup](./ENV_SETUP.md) - Configuration guide
-- [OAuth Architecture](./MCP_SPEC_COMPLIANT_AUTH.md) - How auth works
-
-## Contributing
-
-This is a starter kit - fork it and make it your own! If you build something cool, let the community know.
+### OAuth with Clerk
+See [CLERK_SETUP.md](CLERK_SETUP.md)
 
 ## License
 
-MIT - Use this however you want.
-
----
-
-Built with ❤️ and minimal bullshit. Stop configuring, start shipping.
+MIT
