@@ -9,20 +9,37 @@ import { loggingMiddleware } from './loggingMiddleware';
 import { ipFilterMiddleware } from './ipFilterMiddleware';
 import { emailFilterMiddleware } from './emailFilterMiddleware';
 import { createLogger } from '../logger';
+import { httpMetricsMiddleware } from '../o11y/metrics/middleware/httpMetrics.js';
+import { shutdownMetrics, MetricsProvider } from '../o11y/metrics';
 
 const logger = createLogger('http');
 
 export class HTTPServer {
   private readonly app: Express;
   private readonly transport: StreamableHTTPServerTransport;
+  private metricsProvider?: MetricsProvider;
 
   constructor() {
     this.app = express();
+
+    if (envProvider.metricsEnabled) {
+      this.initializeMetrics();
+    }
+
     this.setupMiddleware();
     this.transport = new StreamableHTTPServerTransport({
       sessionIdGenerator: undefined, // Stateless mode
       enableJsonResponse: false // Use SSE streaming
     });
+  }
+
+  private initializeMetrics(): void {
+      this.metricsProvider = MetricsProvider.initialize({
+        port: envProvider.metricsPort,
+        serviceName: envProvider.mcpServerName,
+        serviceVersion: envProvider.mcpServerVersion,
+      });
+      logger.info('Metrics initialized for HTTP server');
   }
 
   private setupMiddleware() {
@@ -42,15 +59,20 @@ export class HTTPServer {
       this.app.use(loggingMiddleware);
     }
     
-    // Setup OAuth metadata endpoints if auth is enabled
-    // This must come BEFORE the auth middleware so the metadata endpoints are public
-    if (envProvider.authEnabled) {
-      const metadataRouter = createOAuthMetadataRouter();
-      this.app.use(metadataRouter);
+    // Add metrics middleware if enabled
+    if (envProvider.metricsEnabled) {
+      this.app.use(httpMetricsMiddleware);
     }
     
-    // Apply DCR-compliant auth middleware globally if AUTH_ENABLED=true
-    this.app.use(dcrAuthMiddleware);
+    // Setup OAuth metadata endpoints and auth middleware if auth is enabled
+    if (envProvider.authEnabled) {
+      // This must come BEFORE the auth middleware so the metadata endpoints are public
+      const metadataRouter = createOAuthMetadataRouter();
+      this.app.use(metadataRouter);
+      
+      // Apply DCR-compliant auth middleware globally
+      this.app.use(dcrAuthMiddleware);
+    }
     
     // Apply email filter AFTER auth (needs user info from auth)
     this.app.use(emailFilterMiddleware);
@@ -88,5 +110,12 @@ export class HTTPServer {
         logger.info({ allowedEmails: envProvider.allowedEmails }, 'Email filtering is ENABLED');
       }
     });
+  }
+
+  public async shutdown(): Promise<void> {
+    if (this.metricsProvider) {
+      await shutdownMetrics();
+      logger.info('Metrics shut down');
+    }
   }
 }

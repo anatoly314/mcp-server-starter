@@ -11,7 +11,7 @@ import { PromptRegistry } from '../primitives/prompts';
 export class PromptHandlers {
   constructor(private readonly promptRegistry: PromptRegistry) {}
 
-  async handleListPrompts(request: ListPromptsRequest): Promise<{ prompts: Prompt[] }> {
+  async handleListPrompts(_request: ListPromptsRequest): Promise<{ prompts: Prompt[] }> {
     const prompts = this.promptRegistry.getPromptDefinitions();
     return { prompts };
   }

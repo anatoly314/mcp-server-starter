@@ -15,6 +15,16 @@
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
+    "experimentalDecorators": true,    // Enable decorators
+    "emitDecoratorMetadata": true,     // Enable decorator metadata
+
+    // Stricter checks for code quality
+    "noUnusedLocals": true,        // Error on unused local variables
+    "noUnusedParameters": true,    // Error on unused function parameters
+    "noImplicitReturns": true,     // Error when not all code paths return
+    "noFallthroughCasesInSwitch": true, // Error on fallthrough in switch statements
+    // Note: TypeScript doesn't have built-in checking for unused private methods/properties
+    // Consider using ESLint with @typescript-eslint/no-unused-private-class-members rule
 
     // Add these for better debugging:
     "inlineSources": true,        // Embeds TypeScript source in the source maps

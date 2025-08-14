@@ -1,4 +1,4 @@
-import { GetPromptResult, McpError, PromptMessage } from '@modelcontextprotocol/sdk/types.js';
+import { GetPromptResult, PromptMessage } from '@modelcontextprotocol/sdk/types.js';
 
 export interface PromptArgumentDefinition {
   name: string;

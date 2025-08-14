@@ -21,11 +21,6 @@ const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
  * - Completing the OAuth flow to obtain an access token
  */
 export async function dcrAuthMiddleware(req: Request, res: Response, next: NextFunction) {
-  // Skip auth if not enabled
-  if (!envProvider.authEnabled) {
-    return next();
-  }
-
   // issuerUrl is guaranteed to exist when authEnabled is true (validated at startup)
   const issuerUrl = envProvider.oauthIssuerUrl!;
 

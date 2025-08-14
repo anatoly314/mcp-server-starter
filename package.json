@@ -2,6 +2,7 @@
   "name": "mcp-server-starter",
   "version": "1.0.0",
   "main": "index.js",
+  "packageManager": "pnpm@9.0.0",
   "scripts": {
     "start": "tsx -r dotenv/config src/server.ts",
     "build": "tsc",
@@ -18,6 +19,11 @@
   "description": "",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.17.0",
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/exporter-prometheus": "^0.203.0",
+    "@opentelemetry/resources": "^2.0.1",
+    "@opentelemetry/sdk-metrics": "^2.0.1",
+    "@opentelemetry/semantic-conventions": "^1.29.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",

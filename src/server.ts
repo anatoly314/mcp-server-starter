@@ -6,6 +6,8 @@ import { createLogger } from './logger';
 
 const logger = createLogger('server');
 
+let httpServerInstance: HTTPServer;
+
 async function main() {
   try {
     // Create MCP server instance
@@ -16,16 +18,16 @@ async function main() {
       const stdioServer = new StdioServer();
       await stdioServer.connectMCPServer(mcpServer.getServer());
     } else {
-      const httpServer = new HTTPServer();
+      httpServerInstance = new HTTPServer();
       
       // Setup MCP endpoints
-      httpServer.setupMCPEndpoints();
+      httpServerInstance.setupMCPEndpoints();
       
       // Connect MCP server to HTTP transport
-      await httpServer.connectMCPServer(mcpServer.getServer());
+      await httpServerInstance.connectMCPServer(mcpServer.getServer());
       
       // Start HTTP server
-      httpServer.start();
+      httpServerInstance.start();
     }
   } catch (error) {
     logger.error({ error }, 'Failed to start server');
@@ -34,13 +36,19 @@ async function main() {
 }
 
 // Handle graceful shutdown
-process.on('SIGINT', () => {
+process.on('SIGINT', async () => {
   logger.info('Shutting down gracefully...');
+  if (httpServerInstance) {
+    await httpServerInstance.shutdown();
+  }
   process.exit(0);
 });
 
-process.on('SIGTERM', () => {
+process.on('SIGTERM', async () => {
   logger.info('Shutting down gracefully...');
+  if (httpServerInstance) {
+    await httpServerInstance.shutdown();
+  }
   process.exit(0);
 });
 

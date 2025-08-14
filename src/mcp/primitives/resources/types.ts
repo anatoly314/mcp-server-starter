@@ -1,4 +1,4 @@
-import { ReadResourceResult, McpError } from '@modelcontextprotocol/sdk/types.js';
+import { ReadResourceResult } from '@modelcontextprotocol/sdk/types.js';
 
 export interface ResourceDefinition {
   uri: string;

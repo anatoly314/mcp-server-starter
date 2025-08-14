@@ -19,6 +19,10 @@ interface EnvironmentConfig {
   
   // Logging Configuration
   REQUEST_LOGGING: boolean;
+  
+  // Metrics Configuration
+  METRICS_ENABLED: boolean;
+  METRICS_PORT: number;
 }
 
 class EnvProvider {
@@ -52,7 +56,11 @@ class EnvProvider {
       ALLOWED_EMAILS: process.env.ALLOWED_EMAILS,
       
       // Logging Configuration
-      REQUEST_LOGGING: process.env.REQUEST_LOGGING !== 'false'
+      REQUEST_LOGGING: process.env.REQUEST_LOGGING !== 'false',
+      
+      // Metrics Configuration
+      METRICS_ENABLED: process.env.METRICS_ENABLED === 'true',
+      METRICS_PORT: parseInt(process.env.METRICS_PORT || '9090', 10)
     };
   }
 
@@ -115,6 +123,14 @@ class EnvProvider {
   
   get requestLogging(): boolean {
     return this.config.REQUEST_LOGGING;
+  }
+  
+  get metricsEnabled(): boolean {
+    return this.config.METRICS_ENABLED;
+  }
+  
+  get metricsPort(): number {
+    return this.config.METRICS_PORT;
   }
 }
 

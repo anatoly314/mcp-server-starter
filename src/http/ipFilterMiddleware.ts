@@ -20,7 +20,7 @@ const logger = createLogger('ip-filter');
  */
 
 // Extract client IP from request
-function getClientIp(req: Request): string | null {
+function getClientIp(req: Request): string {
   // Priority 1: Cloudflare header (most reliable when behind CF)
   const cfConnectingIp = req.headers['cf-connecting-ip'];
   if (cfConnectingIp && typeof cfConnectingIp === 'string') {
@@ -41,7 +41,7 @@ function getClientIp(req: Request): string | null {
   }
   
   // If no proxy headers, it's likely a local request
-  return null;
+  return '';
 }
 
 export function ipFilterMiddleware(req: Request, res: Response, next: NextFunction): void {

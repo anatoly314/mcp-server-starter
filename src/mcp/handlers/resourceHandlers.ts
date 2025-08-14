@@ -11,7 +11,7 @@ import { ResourceRegistry } from '../primitives/resources';
 export class ResourceHandlers {
   constructor(private readonly resourceRegistry: ResourceRegistry) {}
 
-  async handleListResources(request: ListResourcesRequest): Promise<{ resources: Resource[] }> {
+  async handleListResources(_request: ListResourcesRequest): Promise<{ resources: Resource[] }> {
     const resources = this.resourceRegistry.getResourceDefinitions();
     return { resources };
   }

@@ -1,4 +1,4 @@
-import { CallToolResult, McpError } from '@modelcontextprotocol/sdk/types.js';
+import { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 
 export interface ToolInputSchema {
   type: 'object';

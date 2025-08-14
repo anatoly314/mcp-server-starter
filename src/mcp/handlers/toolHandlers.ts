@@ -11,7 +11,7 @@ import { ToolRegistry } from '../primitives/tools';
 export class ToolHandlers {
   constructor(private readonly toolRegistry: ToolRegistry) {}
 
-  async handleListTools(request: ListToolsRequest): Promise<{ tools: Tool[] }> {
+  async handleListTools(_request: ListToolsRequest): Promise<{ tools: Tool[] }> {
     const tools = this.toolRegistry.getToolDefinitions();
     return { tools };
   }
