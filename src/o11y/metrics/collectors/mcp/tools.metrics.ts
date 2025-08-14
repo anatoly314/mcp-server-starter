@@ -18,14 +18,9 @@ export function initializeToolsMetrics() {
     description: 'Total number of tool execution errors',
   });
 
-  const toolRegistrySize = meter.createObservableGauge('tool_registry_size', {
-    description: 'Current number of registered tools',
-  });
-
   return {
     toolExecutionDuration,
     toolExecutionTotal,
     toolExecutionErrors,
-    toolRegistrySize,
   };
 }

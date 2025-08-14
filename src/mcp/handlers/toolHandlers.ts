@@ -7,6 +7,7 @@ import {
   McpError 
 } from '@modelcontextprotocol/sdk/types.js';
 import { ToolRegistry } from '../primitives/tools';
+import { MeasureExecution } from '../../o11y/metrics/decorators.js';
 
 export class ToolHandlers {
   constructor(private readonly toolRegistry: ToolRegistry) {}
@@ -16,6 +17,7 @@ export class ToolHandlers {
     return { tools };
   }
 
+  @MeasureExecution('tool')
   async handleCallTool(request: CallToolRequest): Promise<CallToolResult> {
     const { name, arguments: args } = request.params;
 

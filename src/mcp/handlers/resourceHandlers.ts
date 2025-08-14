@@ -7,6 +7,7 @@ import {
   McpError
 } from '@modelcontextprotocol/sdk/types.js';
 import { ResourceRegistry } from '../primitives/resources';
+import { MeasureExecution } from '../../o11y/metrics/decorators.js';
 
 export class ResourceHandlers {
   constructor(private readonly resourceRegistry: ResourceRegistry) {}
@@ -16,6 +17,7 @@ export class ResourceHandlers {
     return { resources };
   }
 
+  @MeasureExecution('resource')
   async handleReadResource(request: ReadResourceRequest): Promise<ReadResourceResult> {
     const { uri } = request.params;
 

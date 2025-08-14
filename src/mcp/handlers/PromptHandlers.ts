@@ -7,6 +7,7 @@ import {
   McpError 
 } from '@modelcontextprotocol/sdk/types.js';
 import { PromptRegistry } from '../primitives/prompts';
+import { MeasureExecution } from '../../o11y/metrics/decorators.js';
 
 export class PromptHandlers {
   constructor(private readonly promptRegistry: PromptRegistry) {}
@@ -16,6 +17,7 @@ export class PromptHandlers {
     return { prompts };
   }
 
+  @MeasureExecution('prompt')
   async handleGetPrompt(request: GetPromptRequest): Promise<GetPromptResult> {
     const { name, arguments: args } = request.params;
 

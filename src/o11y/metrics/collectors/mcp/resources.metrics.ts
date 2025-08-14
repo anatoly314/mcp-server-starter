@@ -23,15 +23,10 @@ export function initializeResourcesMetrics() {
     unit: 'By',
   });
 
-  const resourceRegistrySize = meter.createObservableGauge('resource_registry_size', {
-    description: 'Current number of registered resources',
-  });
-
   return {
     resourceReadDuration,
     resourceReadTotal,
     resourceReadErrors,
     resourceSizeBytes,
-    resourceRegistrySize,
   };
 }

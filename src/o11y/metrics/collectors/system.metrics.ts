@@ -12,14 +12,6 @@ export function initializeSystemMetrics() {
     unit: 's',
   });
 
-  const activeHandles = meter.createObservableGauge('nodejs_active_handles', {
-    description: 'Number of active handles in Node.js',
-  });
-
-  const activeRequests = meter.createObservableGauge('nodejs_active_requests', {
-    description: 'Number of active requests in Node.js',
-  });
-
   const heapUsedPercent = meter.createObservableGauge('nodejs_heap_used_percent', {
     description: 'Percentage of heap memory used',
     unit: '%',
@@ -30,19 +22,18 @@ export function initializeSystemMetrics() {
     unit: 'By',
   });
 
+  // Note: Removed activeHandles and activeRequests metrics
+  // These used private Node.js APIs which are unsafe
+
   // Set up callbacks to collect system metrics
   setupSystemMetricsCallbacks({
     eventLoopLag,
-    activeHandles,
-    activeRequests,
     heapUsedPercent,
     externalMemory,
   });
 
   return {
     eventLoopLag,
-    activeHandles,
-    activeRequests,
     heapUsedPercent,
     externalMemory,
   };
@@ -50,8 +41,6 @@ export function initializeSystemMetrics() {
 
 function setupSystemMetricsCallbacks(metrics: {
   eventLoopLag: ObservableGauge;
-  activeHandles: ObservableGauge;
-  activeRequests: ObservableGauge;
   heapUsedPercent: ObservableGauge;
   externalMemory: ObservableGauge;
 }) {
@@ -88,17 +77,8 @@ function setupSystemMetricsCallbacks(metrics: {
     observableResult.observe(eventLoopLag);
   });
 
-  // Active handles in Node.js
-  metrics.activeHandles.addCallback((observableResult) => {
-    // @ts-ignore - _getActiveHandles is not in types but exists
-    const handles = process._getActiveHandles?.()?.length || 0;
-    observableResult.observe(handles);
-  });
-
-  // Active requests in Node.js
-  metrics.activeRequests.addCallback((observableResult) => {
-    // @ts-ignore - _getActiveRequests is not in types but exists
-    const requests = process._getActiveRequests?.()?.length || 0;
-    observableResult.observe(requests);
-  });
+  // Note: Removed activeHandles and activeRequests metrics
+  // These used private Node.js APIs (_getActiveHandles, _getActiveRequests)
+  // which are unsafe and can break in any Node.js version update.
+  // There's no public API alternative for these metrics.
 }

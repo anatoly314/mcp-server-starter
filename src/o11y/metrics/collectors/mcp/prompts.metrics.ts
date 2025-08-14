@@ -18,14 +18,9 @@ export function initializePromptsMetrics() {
     description: 'Total number of prompt generation errors',
   });
 
-  const promptRegistrySize = meter.createObservableGauge('prompt_registry_size', {
-    description: 'Current number of registered prompts',
-  });
-
   return {
     promptGenerationDuration,
     promptGenerationTotal,
     promptGenerationErrors,
-    promptRegistrySize,
   };
 }
