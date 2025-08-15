@@ -34,12 +34,17 @@ export class HTTPServer {
   }
 
   private initializeMetrics(): void {
+    try {
       this.metricsProvider = MetricsProvider.initialize({
         port: envProvider.metricsPort,
         serviceName: envProvider.mcpServerName,
         serviceVersion: envProvider.mcpServerVersion,
       });
       logger.info('Metrics initialized for HTTP server');
+    } catch (error) {
+      logger.error({ error }, 'Failed to initialize metrics - continuing without metrics');
+      // metricsProvider remains undefined, app continues without metrics
+    }
   }
 
   private setupMiddleware() {

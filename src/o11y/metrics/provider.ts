@@ -70,16 +70,21 @@ export class MetricsProvider {
   }
 
   private initializeCollectors(): void {
-    // Initialize all metric categories and store them
-    this.metrics = {
-      ...initializeHttpMetrics(),
-      ...initializeMcpMetrics(),
-      ...initializeToolsMetrics(),
-      ...initializeResourcesMetrics(),
-      ...initializePromptsMetrics(),
-      ...initializeAuthMetrics(),
-      ...initializeSystemMetrics(),
-    };
+    try {
+      // Initialize all metric categories and store them
+      this.metrics = {
+        ...initializeHttpMetrics(),
+        ...initializeMcpMetrics(),
+        ...initializeToolsMetrics(),
+        ...initializeResourcesMetrics(),
+        ...initializePromptsMetrics(),
+        ...initializeAuthMetrics(),
+        ...initializeSystemMetrics(),
+      };
+    } catch (error) {
+      logger.error({ error }, 'Failed to initialize metrics collectors');
+      throw new Error('Metrics initialization failed');
+    }
   }
 
   public static initialize(config: MetricsConfig): MetricsProvider {
