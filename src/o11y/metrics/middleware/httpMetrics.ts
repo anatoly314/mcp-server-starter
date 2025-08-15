@@ -27,7 +27,7 @@ export const httpMetricsMiddleware = (req: Request, res: Response, next: NextFun
     httpRequestSizeBytes.record(requestSize, labels);
   }
   
-  // Hook into response finish event
+  // Hook into response finish event for metrics that need completion
   res.on('finish', () => {
     const duration = (Date.now() - startTime) / 1000; // Convert to seconds
     const statusLabels = {
@@ -39,13 +39,17 @@ export const httpMetricsMiddleware = (req: Request, res: Response, next: NextFun
     // Record metrics
     httpRequestTotal.add(1, statusLabels);
     httpRequestDuration.record(duration, statusLabels);
-    httpActiveRequests.add(-1, labels);
     
     // Track response size
     const responseSize = parseInt(res.get('content-length') || '0', 10);
     if (responseSize > 0) {
       httpResponseSizeBytes.record(responseSize, statusLabels);
     }
+  });
+  
+  // Use close event for decrementing active requests (fires on both finish and abort)
+  res.on('close', () => {
+    httpActiveRequests.add(-1, labels);
   });
   
   next();

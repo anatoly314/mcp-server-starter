@@ -47,8 +47,8 @@ COPY --from=builder --chown=nodejs:nodejs /app/dist ./dist
 # Switch to non-root user
 USER nodejs
 
-# Expose port (default 3000, configurable via env)
-EXPOSE 3000
+# Expose ports (default 3000 for app, 9090 for metrics)
+EXPOSE 3000 9090
 
 # Use dumb-init to handle signals properly
 ENTRYPOINT ["dumb-init", "--"]
