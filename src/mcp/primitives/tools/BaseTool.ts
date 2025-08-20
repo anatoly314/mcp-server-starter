@@ -1,4 +1,5 @@
 import { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
+import {BasePrimitive} from "../BasePrimitive";
 
 export interface ToolInputSchema {
   type: 'object';
@@ -18,7 +19,7 @@ export interface ToolImplementation {
   execute(args: any): Promise<CallToolResult>;
 }
 
-export abstract class BaseTool implements ToolImplementation {
+export abstract class BaseTool extends BasePrimitive implements ToolImplementation {
   abstract definition: ToolDefinition;
   abstract execute(args: any): Promise<CallToolResult>;
 }

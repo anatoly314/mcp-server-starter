@@ -1,5 +1,5 @@
 import { ReadResourceResult } from '@modelcontextprotocol/sdk/types.js';
-import { BaseResource, ResourceDefinition } from '../types.js';
+import { BaseResource, ResourceDefinition } from '../BaseResource.js';
 import os from 'os';
 
 export class SystemInfoResource extends BaseResource {

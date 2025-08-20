@@ -1,4 +1,5 @@
 import { GetPromptResult, PromptMessage } from '@modelcontextprotocol/sdk/types.js';
+import {BasePrimitive} from "../BasePrimitive";
 
 export interface PromptArgumentDefinition {
   name: string;
@@ -17,7 +18,7 @@ export interface PromptImplementation {
   getPrompt(args?: Record<string, string>): Promise<GetPromptResult>;
 }
 
-export abstract class BasePrompt implements PromptImplementation {
+export abstract class BasePrompt extends BasePrimitive implements PromptImplementation {
   abstract definition: PromptDefinition;
   abstract getPrompt(args?: Record<string, string>): Promise<GetPromptResult>;
   

@@ -1,5 +1,5 @@
 import { GetPromptResult, ErrorCode, McpError } from '@modelcontextprotocol/sdk/types.js';
-import { BasePrompt, PromptDefinition } from '../types.js';
+import { BasePrompt, PromptDefinition } from '../BasePrompt.js';
 
 export class CodeReviewPrompt extends BasePrompt {
   definition: PromptDefinition = {

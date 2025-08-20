@@ -1,4 +1,5 @@
 import { ReadResourceResult } from '@modelcontextprotocol/sdk/types.js';
+import {BasePrimitive} from "../BasePrimitive";
 
 export interface ResourceDefinition {
   uri: string;
@@ -13,7 +14,7 @@ export interface ResourceImplementation {
   subscribe?(uri: string): Promise<void>; // Optional for future real-time updates
 }
 
-export abstract class BaseResource implements ResourceImplementation {
+export abstract class BaseResource extends BasePrimitive implements ResourceImplementation {
   abstract definition: ResourceDefinition;
   abstract read(uri: string): Promise<ReadResourceResult>;
   

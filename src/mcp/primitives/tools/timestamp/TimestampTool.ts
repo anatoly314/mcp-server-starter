@@ -1,7 +1,13 @@
 import { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
-import { BaseTool, ToolDefinition } from '../types.js';
+import { BaseTool, ToolDefinition } from '../BaseTool';
 
 export class TimestampTool extends BaseTool {
+
+  constructor() {
+    super();
+    this.logger.info("TimestampTool ready");
+  }
+
   definition: ToolDefinition = {
     name: 'get_timestamp',
     description: 'Get current timestamp',
@@ -33,7 +39,9 @@ export class TimestampTool extends BaseTool {
       default:
         timestamp = now.toISOString();
     }
-    
+
+    this.logger.info(`Timestamp timed out: ${timestamp}`);
+
     return {
       content: [
         {

@@ -1,5 +1,5 @@
 import { Tool } from '@modelcontextprotocol/sdk/types.js';
-import { ToolImplementation } from './types.js';
+import { ToolImplementation } from './BaseTool';
 import { createLogger } from '../../../logger.js';
 
 const logger = createLogger('tool-registry');

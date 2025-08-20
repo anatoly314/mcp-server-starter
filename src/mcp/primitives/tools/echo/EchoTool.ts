@@ -1,5 +1,5 @@
 import { CallToolResult, ErrorCode, McpError } from '@modelcontextprotocol/sdk/types.js';
-import { BaseTool, ToolDefinition } from '../types.js';
+import { BaseTool, ToolDefinition } from '../BaseTool';
 
 export class EchoTool extends BaseTool {
   definition: ToolDefinition = {

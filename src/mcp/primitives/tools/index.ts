@@ -18,4 +18,4 @@ export function createToolRegistry(): ToolRegistry {
 }
 
 export { ToolRegistry } from './ToolRegistry.js';
-export type { ToolDefinition, ToolImplementation } from './types.js';
+export type { ToolDefinition, ToolImplementation } from './BaseTool';
