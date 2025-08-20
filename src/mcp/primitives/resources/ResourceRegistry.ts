@@ -1,5 +1,5 @@
 import { Resource } from '@modelcontextprotocol/sdk/types.js';
-import { ResourceImplementation } from './types.js';
+import { ResourceImplementation } from './BaseResource.js';
 import { createLogger } from '../../../logger.js';
 
 const logger = createLogger('resource-registry');

@@ -20,4 +20,4 @@ export function createResourceRegistry(): ResourceRegistry {
 }
 
 export { ResourceRegistry } from './ResourceRegistry.js';
-export type { ResourceDefinition, ResourceImplementation } from './types.js';
+export type { ResourceDefinition, ResourceImplementation } from './BaseResource.js';

@@ -1,5 +1,5 @@
 import { Prompt } from '@modelcontextprotocol/sdk/types.js';
-import { PromptImplementation } from './types.js';
+import { PromptImplementation } from './BasePrompt.js';
 import { createLogger } from '../../../logger.js';
 
 const logger = createLogger('prompt-registry');

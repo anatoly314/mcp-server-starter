@@ -20,4 +20,4 @@ export function createPromptRegistry(): PromptRegistry {
 }
 
 export { PromptRegistry } from './PromptRegistry.js';
-export type { PromptDefinition, PromptImplementation } from './types.js';
+export type { PromptDefinition, PromptImplementation } from './BasePrompt.js';
