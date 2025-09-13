@@ -21,8 +21,6 @@ docker run -p 3000:3000 \
   -e HTTP_HOST=0.0.0.0 \
   -e HTTP_PORT=3000 \
   -e AUTH_ENABLED=true \
-  -e OAUTH_CLIENT_ID=your-client-id \
-  -e OAUTH_CLIENT_SECRET=your-client-secret \
   -e PUBLIC_URL=https://your-domain.com \
   mcp-server-starter
 
@@ -73,8 +71,6 @@ HTTP_PORT=3000
 
 # OAuth (if AUTH_ENABLED=true)
 AUTH_ENABLED=true
-OAUTH_CLIENT_ID=xxx
-OAUTH_CLIENT_SECRET=xxx
 PUBLIC_URL=https://your-domain.com
 
 # Security

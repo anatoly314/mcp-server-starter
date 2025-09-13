@@ -24,17 +24,6 @@ services:
       OAUTH_PROXY_ENABLED: "true"
       OAUTH_PROVIDER: google
       
-      # OAuth Credentials
-      OAUTH_CLIENT_ID: 448396576870-j9mu949o4cs7osj7rpc8pc807h8jv9do.apps.googleusercontent.com
-      OAUTH_CLIENT_SECRET: ${OAUTH_CLIENT_SECRET:-your-client-secret-here}
-      OAUTH_REDIRECT_URI: ""
-      
-      # OAuth URLs
-      OAUTH_AUTHORIZATION_URL: https://accounts.google.com/o/oauth2/v2/auth
-      OAUTH_TOKEN_URL: https://oauth2.googleapis.com/token
-      OAUTH_USERINFO_URL: https://www.googleapis.com/oauth2/v2/userinfo
-      OAUTH_SCOPES: openid email profile
-      
       # Public URL (update this for your deployment)
       PUBLIC_URL: https://dev.anatoly.dev
       
