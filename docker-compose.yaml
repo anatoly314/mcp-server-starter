@@ -21,9 +21,7 @@ services:
       
       # OAuth Configuration
       AUTH_ENABLED: "true"
-      OAUTH_PROXY_ENABLED: "true"
-      OAUTH_PROVIDER: google
-      
+
       # Public URL (update this for your deployment)
       PUBLIC_URL: https://dev.anatoly.dev
       
