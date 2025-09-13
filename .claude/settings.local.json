@@ -7,5 +7,6 @@
       "Bash(npm install:*)"
     ],
     "deny": []
-  }
+  },
+  "outputStyle": "Explanatory"
 }

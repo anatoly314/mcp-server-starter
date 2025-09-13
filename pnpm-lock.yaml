@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@modelcontextprotocol/sdk':
-        specifier: ^1.17.0
-        version: 1.17.2
+        specifier: ^1.18.0
+        version: 1.18.0
       '@opentelemetry/api':
         specifier: ^1.9.0
         version: 1.9.0
@@ -18,26 +18,26 @@ importers:
         specifier: ^0.203.0
         version: 0.203.0(@opentelemetry/api@1.9.0)
       '@opentelemetry/resources':
-        specifier: ^2.0.1
-        version: 2.0.1(@opentelemetry/api@1.9.0)
+        specifier: ^2.1.0
+        version: 2.1.0(@opentelemetry/api@1.9.0)
       '@opentelemetry/sdk-metrics':
-        specifier: ^2.0.1
-        version: 2.0.1(@opentelemetry/api@1.9.0)
+        specifier: ^2.1.0
+        version: 2.1.0(@opentelemetry/api@1.9.0)
       '@opentelemetry/semantic-conventions':
-        specifier: ^1.29.0
-        version: 1.36.0
+        specifier: ^1.37.0
+        version: 1.37.0
       cors:
         specifier: ^2.8.5
         version: 2.8.5
       dotenv:
-        specifier: ^17.2.1
-        version: 17.2.1
+        specifier: ^17.2.2
+        version: 17.2.2
       express:
         specifier: ^5.1.0
         version: 5.1.0
       google-auth-library:
-        specifier: ^10.1.0
-        version: 10.2.1
+        specifier: ^10.3.0
+        version: 10.3.0
       ip-range-check:
         specifier: ^0.2.0
         version: 0.2.0
@@ -45,8 +45,8 @@ importers:
         specifier: ^9.0.2
         version: 9.0.2
       pino:
-        specifier: ^9.8.0
-        version: 9.9.0
+        specifier: ^9.9.5
+        version: 9.9.5
       pino-http:
         specifier: ^10.5.0
         version: 10.5.0
@@ -55,8 +55,8 @@ importers:
         version: 13.1.1
     devDependencies:
       '@modelcontextprotocol/inspector':
-        specifier: ^0.16.2
-        version: 0.16.3(@types/node@24.2.1)(typescript@5.9.2)
+        specifier: ^0.16.7
+        version: 0.16.7(@types/node@24.3.3)(typescript@5.9.2)
       '@types/cors':
         specifier: ^2.8.19
         version: 2.8.19
@@ -67,11 +67,11 @@ importers:
         specifier: ^9.0.10
         version: 9.0.10
       '@types/node':
-        specifier: ^24.1.0
-        version: 24.2.1
+        specifier: ^24.3.3
+        version: 24.3.3
       tsx:
-        specifier: ^4.20.3
-        version: 4.20.4
+        specifier: ^4.20.5
+        version: 4.20.5
       typescript:
         specifier: ^5.8.3
         version: 5.9.2
@@ -241,11 +241,11 @@ packages:
   '@floating-ui/core@1.7.3':
     resolution: {integrity: sha512-sGnvb5dmrJaKEZ+LDIpguvdX3bDlEllmv4/ClQ9awcmCZrlx5jQyyMWFM5kBI+EyNOCDDiKk8il0zeuX3Zlg/w==}
 
-  '@floating-ui/dom@1.7.3':
-    resolution: {integrity: sha512-uZA413QEpNuhtb3/iIKoYMSK07keHPYeXF02Zhd6e213j+d1NamLix/mCLxBUDW/Gx52sPH2m+chlUsyaBs/Ag==}
+  '@floating-ui/dom@1.7.4':
+    resolution: {integrity: sha512-OOchDgh4F2CchOX94cRVqhvy7b3AFb+/rQXyswmzmGakRfkMgoWVjfnLWkRirfLEfuD4ysVW16eXzwt3jHIzKA==}
 
-  '@floating-ui/react-dom@2.1.5':
-    resolution: {integrity: sha512-HDO/1/1oH9fjj4eLgegrlH3dklZpHtUYYFiVwMUwfGvk9jWDRWqkklA2/NFScknrcNSspbV868WjXORvreDX+Q==}
+  '@floating-ui/react-dom@2.1.6':
+    resolution: {integrity: sha512-4JX6rEatQEvlmgU80wZyq9RT96HZJa88q8hp0pBd+LrczeDI4o6uA2M+uvxngVHo4Ihr8uibXxH6+70zhAFrVw==}
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
@@ -263,25 +263,25 @@ packages:
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
-  '@modelcontextprotocol/inspector-cli@0.16.3':
-    resolution: {integrity: sha512-6Hbh+QVRsEDel7hA9qiRklwWEoW4dQXHw4Ltr8JdsU1ziqem4/ERgGxthg/d+qrmbVwW9shOqPIaGoRFaZ264g==}
+  '@modelcontextprotocol/inspector-cli@0.16.7':
+    resolution: {integrity: sha512-4/agV9H11lmHzuJXNpJimQCh3cXg6xH6Eu+d0zKTdmQPUseFwAC4Y3Jgk7O/U0z44j2xvZk8bK/ScRzoiKVdsQ==}
     hasBin: true
 
-  '@modelcontextprotocol/inspector-client@0.16.3':
-    resolution: {integrity: sha512-BbFyNUesmZrl9FcM+TeogAo2DM6lA1+NJSSszd9+xtuumdX8WxEynv4quBgfxW/R+nHv6+D5h/ftQ3x9hwgskQ==}
+  '@modelcontextprotocol/inspector-client@0.16.7':
+    resolution: {integrity: sha512-lkFtVc37YvcFm2Nuee5LAT3JfPbfhrhEMuerw0EDVQgN3hvKXh6dzSKJxSjinjJhutyHPQHvft7TqXMHGXtw2w==}
     hasBin: true
 
-  '@modelcontextprotocol/inspector-server@0.16.3':
-    resolution: {integrity: sha512-7chp1jSSzM/7YswfQXA0CoBoWwEzUyKBe9s4H3e8DOBJPho6IxYgouHccHHmghWkd7e2W6ir3xwQBkLRnkt2nQ==}
+  '@modelcontextprotocol/inspector-server@0.16.7':
+    resolution: {integrity: sha512-Mgxq6fk5n2HxmjSOLlVUUIf6Vmpnva9tYY4+MWpb6ggjLcxcn5waD+Mg4qjL6zcjD4E9ZcBlrq2j2Arp3vFxHw==}
     hasBin: true
 
-  '@modelcontextprotocol/inspector@0.16.3':
-    resolution: {integrity: sha512-9zOf8piPYNz/8vLEMHzmp8kBYQ/FZ1WP1Ao7fXHqkNcSbyw6d7CfTgZvI2Uj1Cb5VFxZ2jWvCD7J80q8G4okjg==}
+  '@modelcontextprotocol/inspector@0.16.7':
+    resolution: {integrity: sha512-PDA5/M9Q8i6SSUPJL7c/EtzO0D8N4VesBeMeRxI7C5FYv1JlgZC6sUGdVyyKIKW6Aa8KelpfS05ZXsQaIqyQ0g==}
     engines: {node: '>=22.7.5'}
     hasBin: true
 
-  '@modelcontextprotocol/sdk@1.17.2':
-    resolution: {integrity: sha512-EFLRNXR/ixpXQWu6/3Cu30ndDFIFNaqUXcTqsGebujeMan9FzhAaFFswLRiFj61rgygDRr8WO1N+UijjgRxX9g==}
+  '@modelcontextprotocol/sdk@1.18.0':
+    resolution: {integrity: sha512-JvKyB6YwS3quM+88JPR0axeRgvdDu3Pv6mdZUy+w4qVkCzGgumb9bXG/TmtDRQv+671yaofVfXSQmFLlWU5qPQ==}
     engines: {node: '>=18'}
 
   '@opentelemetry/api@1.9.0':
@@ -290,6 +290,12 @@ packages:
 
   '@opentelemetry/core@2.0.1':
     resolution: {integrity: sha512-MaZk9SJIDgo1peKevlbhP6+IwIiNPNmswNL4AF0WaQJLbHXjr9SrZMgS12+iqr9ToV4ZVosCcc0f8Rg67LXjxw==}
+    engines: {node: ^18.19.0 || >=20.6.0}
+    peerDependencies:
+      '@opentelemetry/api': '>=1.0.0 <1.10.0'
+
+  '@opentelemetry/core@2.1.0':
+    resolution: {integrity: sha512-RMEtHsxJs/GiHHxYT58IY57UXAQTuUnZVco6ymDEqTNlJKTimM4qPUPVe8InNFyBjhHBEAx4k3Q8LtNayBsbUQ==}
     engines: {node: ^18.19.0 || >=20.6.0}
     peerDependencies:
       '@opentelemetry/api': '>=1.0.0 <1.10.0'
@@ -306,14 +312,26 @@ packages:
     peerDependencies:
       '@opentelemetry/api': '>=1.3.0 <1.10.0'
 
+  '@opentelemetry/resources@2.1.0':
+    resolution: {integrity: sha512-1CJjf3LCvoefUOgegxi8h6r4B/wLSzInyhGP2UmIBYNlo4Qk5CZ73e1eEyWmfXvFtm1ybkmfb2DqWvspsYLrWw==}
+    engines: {node: ^18.19.0 || >=20.6.0}
+    peerDependencies:
+      '@opentelemetry/api': '>=1.3.0 <1.10.0'
+
   '@opentelemetry/sdk-metrics@2.0.1':
     resolution: {integrity: sha512-wf8OaJoSnujMAHWR3g+/hGvNcsC16rf9s1So4JlMiFaFHiE4HpIA3oUh+uWZQ7CNuK8gVW/pQSkgoa5HkkOl0g==}
     engines: {node: ^18.19.0 || >=20.6.0}
     peerDependencies:
       '@opentelemetry/api': '>=1.9.0 <1.10.0'
 
-  '@opentelemetry/semantic-conventions@1.36.0':
-    resolution: {integrity: sha512-TtxJSRD8Ohxp6bKkhrm27JRHAxPczQA7idtcTOMYI+wQRRrfgqxHv1cFbCApcSnNjtXkmzFozn6jQtFrOmbjPQ==}
+  '@opentelemetry/sdk-metrics@2.1.0':
+    resolution: {integrity: sha512-J9QX459mzqHLL9Y6FZ4wQPRZG4TOpMCyPOh6mkr/humxE1W2S3Bvf4i75yiMW9uyed2Kf5rxmLhTm/UK8vNkAw==}
+    engines: {node: ^18.19.0 || >=20.6.0}
+    peerDependencies:
+      '@opentelemetry/api': '>=1.9.0 <1.10.0'
+
+  '@opentelemetry/semantic-conventions@1.37.0':
+    resolution: {integrity: sha512-JD6DerIKdJGmRp4jQyX5FlrQjA4tjOw1cvfsPAZXfOOEErMUHjPcPSICS+6WnM0nB0efSFARh0KAZss+bvExOA==}
     engines: {node: '>=14'}
 
   '@radix-ui/number@1.1.1':
@@ -729,8 +747,8 @@ packages:
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
 
-  '@types/node@24.2.1':
-    resolution: {integrity: sha512-DRh5K+ka5eJic8CjH7td8QpYEV6Zo10gfRkjHCO3weqZHWDtAaSTFtl4+VMqOJ4N5jcuhZ9/l+yy8rVgw7BQeQ==}
+  '@types/node@24.3.3':
+    resolution: {integrity: sha512-GKBNHjoNw3Kra1Qg5UXttsY5kiWMEfoHq2TmXb+b1rcm6N7B3wTrFYIf/oSZ1xNQ+hVVijgLkiDZh7jRRsh+Gw==}
 
   '@types/qs@6.14.0':
     resolution: {integrity: sha512-eOunJqu0K1923aExK6y8p6fsihYEn/BYuQ4g0CxAAgFc4b/ZLN4CrsRZ55srTdqoiLzU2B2evC+apEIxprEzkQ==}
@@ -935,8 +953,8 @@ packages:
     resolution: {integrity: sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==}
     engines: {node: '>=0.3.1'}
 
-  dotenv@17.2.1:
-    resolution: {integrity: sha512-kQhDYKZecqnM0fCnzI5eIv5L4cAe/iRI+HqMbO/hbRdTAeXDG+M9FjipUxNfbARuEg4iHIbhnhs78BCHNbSxEQ==}
+  dotenv@17.2.2:
+    resolution: {integrity: sha512-Sf2LSQP+bOlhKWWyhFsn0UsfdK/kCWRv1iuA2gXAwt3dyNabr6QSj00I2V10pidqz69soatm9ZwZvpQMTIOd5Q==}
     engines: {node: '>=12'}
 
   dunder-proto@1.0.1:
@@ -1079,8 +1097,8 @@ packages:
   get-tsconfig@4.10.1:
     resolution: {integrity: sha512-auHyJ4AgMz7vgS8Hp3N6HXSmlMdUyhSUrfBF16w153rxtLIEOE+HGqaBppczZvnHLqQJfiHotCYpNhl0lUROFQ==}
 
-  google-auth-library@10.2.1:
-    resolution: {integrity: sha512-HMxFl2NfeHYnaL1HoRIN1XgorKS+6CDaM+z9LSSN+i/nKDDL4KFFEWogMXu7jV4HZQy2MsxpY+wA5XIf3w410A==}
+  google-auth-library@10.3.0:
+    resolution: {integrity: sha512-ylSE3RlCRZfZB56PFJSfUCuiuPq83Fx8hqu1KPWGK8FVdSaxlp/qkeMMX/DT/18xkwXIHvXEXkZsljRwfrdEfQ==}
     engines: {node: '>=18'}
 
   google-logging-utils@1.1.1:
@@ -1325,8 +1343,8 @@ packages:
   pino-std-serializers@7.0.0:
     resolution: {integrity: sha512-e906FRY0+tV27iq4juKzSYPbUj2do2X2JX4EzSca1631EB2QJQUqGbDuERal7LCtOpxl6x3+nvo9NPZcmjkiFA==}
 
-  pino@9.9.0:
-    resolution: {integrity: sha512-zxsRIQG9HzG+jEljmvmZupOMDUQ0Jpj0yAgE28jQvvrdYTlEaiGwelJpdndMl/MBuRr70heIj83QyqJUWaU8mQ==}
+  pino@9.9.5:
+    resolution: {integrity: sha512-d1s98p8/4TfYhsJ09r/Azt30aYELRi6NNnZtEbqFw6BoGsdPVf5lKNK3kUwH8BmJJfpTLNuicjUQjaMbd93dVg==}
     hasBin: true
 
   pkce-challenge@4.1.0:
@@ -1545,11 +1563,6 @@ packages:
   tailwind-merge@2.6.0:
     resolution: {integrity: sha512-P+Vu1qXfzediirmHOC3xKGAYeZtPcV9g76X+xg2FD4tYgR71ewMA35Y3sCz3zhiN/dwefRpJX0yBcgwi1fXNQA==}
 
-  tailwindcss-animate@1.0.7:
-    resolution: {integrity: sha512-bl6mpH3T7I3UFxuvDEXLxy/VuFxBk5bbzplh7tXI68mwMokNYd1t9qPBHlnyTwfa4JGC4zP516I1hYYtQ/vspA==}
-    peerDependencies:
-      tailwindcss: '>=3.0.0 || insiders'
-
   thread-stream@3.1.0:
     resolution: {integrity: sha512-OqyPZ9u96VohAyMfJykzmivOrY2wfMSf3C5TtFJVgN+Hm6aj+voFhlK+kZEIv2FBh1X6Xp3DlnCOfEQ3B2J86A==}
 
@@ -1578,8 +1591,8 @@ packages:
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
 
-  tsx@4.20.4:
-    resolution: {integrity: sha512-yyxBKfORQ7LuRt/BQKBXrpcq59ZvSW0XxwfjAt3w2/8PmdxaFzijtMhTawprSHhpzeM5BgU2hXHG3lklIERZXg==}
+  tsx@4.20.5:
+    resolution: {integrity: sha512-+wKjMNU9w/EaQayHXb7WA7ZaHY6hN8WgfvHNQ3t1PnU91/7O8TcTnIhCDYTZwnt8JsO9IBqZ30Ln1r7pPF52Aw==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -1773,14 +1786,14 @@ snapshots:
     dependencies:
       '@floating-ui/utils': 0.2.10
 
-  '@floating-ui/dom@1.7.3':
+  '@floating-ui/dom@1.7.4':
     dependencies:
       '@floating-ui/core': 1.7.3
       '@floating-ui/utils': 0.2.10
 
-  '@floating-ui/react-dom@2.1.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@floating-ui/react-dom@2.1.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@floating-ui/dom': 1.7.3
+      '@floating-ui/dom': 1.7.4
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
@@ -1795,17 +1808,17 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@modelcontextprotocol/inspector-cli@0.16.3':
+  '@modelcontextprotocol/inspector-cli@0.16.7':
     dependencies:
-      '@modelcontextprotocol/sdk': 1.17.2
+      '@modelcontextprotocol/sdk': 1.18.0
       commander: 13.1.0
       spawn-rx: 5.1.2
     transitivePeerDependencies:
       - supports-color
 
-  '@modelcontextprotocol/inspector-client@0.16.3':
+  '@modelcontextprotocol/inspector-client@0.16.7':
     dependencies:
-      '@modelcontextprotocol/sdk': 1.17.2
+      '@modelcontextprotocol/sdk': 1.18.0
       '@radix-ui/react-checkbox': 1.3.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-dialog': 1.1.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-icons': 1.3.2(react@18.3.1)
@@ -1828,17 +1841,15 @@ snapshots:
       react-simple-code-editor: 0.14.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       serve-handler: 6.1.6
       tailwind-merge: 2.6.0
-      tailwindcss-animate: 1.0.7
       zod: 3.25.76
     transitivePeerDependencies:
       - '@types/react'
       - '@types/react-dom'
       - supports-color
-      - tailwindcss
 
-  '@modelcontextprotocol/inspector-server@0.16.3':
+  '@modelcontextprotocol/inspector-server@0.16.7':
     dependencies:
-      '@modelcontextprotocol/sdk': 1.17.2
+      '@modelcontextprotocol/sdk': 1.18.0
       cors: 2.8.5
       express: 5.1.0
       ws: 8.18.3
@@ -1848,17 +1859,17 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@modelcontextprotocol/inspector@0.16.3(@types/node@24.2.1)(typescript@5.9.2)':
+  '@modelcontextprotocol/inspector@0.16.7(@types/node@24.3.3)(typescript@5.9.2)':
     dependencies:
-      '@modelcontextprotocol/inspector-cli': 0.16.3
-      '@modelcontextprotocol/inspector-client': 0.16.3
-      '@modelcontextprotocol/inspector-server': 0.16.3
-      '@modelcontextprotocol/sdk': 1.17.2
+      '@modelcontextprotocol/inspector-cli': 0.16.7
+      '@modelcontextprotocol/inspector-client': 0.16.7
+      '@modelcontextprotocol/inspector-server': 0.16.7
+      '@modelcontextprotocol/sdk': 1.18.0
       concurrently: 9.2.0
       open: 10.2.0
       shell-quote: 1.8.3
       spawn-rx: 5.1.2
-      ts-node: 10.9.2(@types/node@24.2.1)(typescript@5.9.2)
+      ts-node: 10.9.2(@types/node@24.3.3)(typescript@5.9.2)
       zod: 3.25.76
     transitivePeerDependencies:
       - '@swc/core'
@@ -1868,11 +1879,10 @@ snapshots:
       - '@types/react-dom'
       - bufferutil
       - supports-color
-      - tailwindcss
       - typescript
       - utf-8-validate
 
-  '@modelcontextprotocol/sdk@1.17.2':
+  '@modelcontextprotocol/sdk@1.18.0':
     dependencies:
       ajv: 6.12.6
       content-type: 1.0.5
@@ -1894,7 +1904,12 @@ snapshots:
   '@opentelemetry/core@2.0.1(@opentelemetry/api@1.9.0)':
     dependencies:
       '@opentelemetry/api': 1.9.0
-      '@opentelemetry/semantic-conventions': 1.36.0
+      '@opentelemetry/semantic-conventions': 1.37.0
+
+  '@opentelemetry/core@2.1.0(@opentelemetry/api@1.9.0)':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/semantic-conventions': 1.37.0
 
   '@opentelemetry/exporter-prometheus@0.203.0(@opentelemetry/api@1.9.0)':
     dependencies:
@@ -1907,7 +1922,13 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.0
       '@opentelemetry/core': 2.0.1(@opentelemetry/api@1.9.0)
-      '@opentelemetry/semantic-conventions': 1.36.0
+      '@opentelemetry/semantic-conventions': 1.37.0
+
+  '@opentelemetry/resources@2.1.0(@opentelemetry/api@1.9.0)':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/core': 2.1.0(@opentelemetry/api@1.9.0)
+      '@opentelemetry/semantic-conventions': 1.37.0
 
   '@opentelemetry/sdk-metrics@2.0.1(@opentelemetry/api@1.9.0)':
     dependencies:
@@ -1915,7 +1936,13 @@ snapshots:
       '@opentelemetry/core': 2.0.1(@opentelemetry/api@1.9.0)
       '@opentelemetry/resources': 2.0.1(@opentelemetry/api@1.9.0)
 
-  '@opentelemetry/semantic-conventions@1.36.0': {}
+  '@opentelemetry/sdk-metrics@2.1.0(@opentelemetry/api@1.9.0)':
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      '@opentelemetry/core': 2.1.0(@opentelemetry/api@1.9.0)
+      '@opentelemetry/resources': 2.1.0(@opentelemetry/api@1.9.0)
+
+  '@opentelemetry/semantic-conventions@1.37.0': {}
 
   '@radix-ui/number@1.1.1': {}
 
@@ -2039,7 +2066,7 @@ snapshots:
 
   '@radix-ui/react-popper@1.2.8(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@floating-ui/react-dom': 2.1.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@floating-ui/react-dom': 2.1.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-arrow': 1.1.7(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-compose-refs': 1.1.2(react@18.3.1)
       '@radix-ui/react-context': 1.1.2(react@18.3.1)
@@ -2221,19 +2248,19 @@ snapshots:
   '@types/body-parser@1.19.6':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 24.2.1
+      '@types/node': 24.3.3
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 24.2.1
+      '@types/node': 24.3.3
 
   '@types/cors@2.8.19':
     dependencies:
-      '@types/node': 24.2.1
+      '@types/node': 24.3.3
 
   '@types/express-serve-static-core@5.0.7':
     dependencies:
-      '@types/node': 24.2.1
+      '@types/node': 24.3.3
       '@types/qs': 6.14.0
       '@types/range-parser': 1.2.7
       '@types/send': 0.17.5
@@ -2249,13 +2276,13 @@ snapshots:
   '@types/jsonwebtoken@9.0.10':
     dependencies:
       '@types/ms': 2.1.0
-      '@types/node': 24.2.1
+      '@types/node': 24.3.3
 
   '@types/mime@1.3.5': {}
 
   '@types/ms@2.1.0': {}
 
-  '@types/node@24.2.1':
+  '@types/node@24.3.3':
     dependencies:
       undici-types: 7.10.0
 
@@ -2266,12 +2293,12 @@ snapshots:
   '@types/send@0.17.5':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 24.2.1
+      '@types/node': 24.3.3
 
   '@types/serve-static@1.15.8':
     dependencies:
       '@types/http-errors': 2.0.5
-      '@types/node': 24.2.1
+      '@types/node': 24.3.3
       '@types/send': 0.17.5
 
   accepts@2.0.0:
@@ -2452,7 +2479,7 @@ snapshots:
 
   diff@4.0.2: {}
 
-  dotenv@17.2.1: {}
+  dotenv@17.2.2: {}
 
   dunder-proto@1.0.1:
     dependencies:
@@ -2642,7 +2669,7 @@ snapshots:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
-  google-auth-library@10.2.1:
+  google-auth-library@10.3.0:
     dependencies:
       base64-js: 1.5.1
       ecdsa-sig-formatter: 1.0.11
@@ -2863,7 +2890,7 @@ snapshots:
   pino-http@10.5.0:
     dependencies:
       get-caller-file: 2.0.5
-      pino: 9.9.0
+      pino: 9.9.5
       pino-std-serializers: 7.0.0
       process-warning: 5.0.0
 
@@ -2885,7 +2912,7 @@ snapshots:
 
   pino-std-serializers@7.0.0: {}
 
-  pino@9.9.0:
+  pino@9.9.5:
     dependencies:
       atomic-sleep: 1.0.0
       fast-redact: 3.5.0
@@ -3120,8 +3147,6 @@ snapshots:
 
   tailwind-merge@2.6.0: {}
 
-  tailwindcss-animate@1.0.7: {}
-
   thread-stream@3.1.0:
     dependencies:
       real-require: 0.2.0
@@ -3130,14 +3155,14 @@ snapshots:
 
   tree-kill@1.2.2: {}
 
-  ts-node@10.9.2(@types/node@24.2.1)(typescript@5.9.2):
+  ts-node@10.9.2(@types/node@24.3.3)(typescript@5.9.2):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.11
       '@tsconfig/node12': 1.0.11
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
-      '@types/node': 24.2.1
+      '@types/node': 24.3.3
       acorn: 8.15.0
       acorn-walk: 8.3.4
       arg: 4.1.3
@@ -3150,7 +3175,7 @@ snapshots:
 
   tslib@2.8.1: {}
 
-  tsx@4.20.4:
+  tsx@4.20.5:
     dependencies:
       esbuild: 0.25.9
       get-tsconfig: 4.10.1
